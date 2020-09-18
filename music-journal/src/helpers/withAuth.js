@@ -1,6 +1,7 @@
 import React from 'react';
 import router from 'next/router';
 import { auth } from '../firebase';
+
 const withAuth = (Component) => {
     return class extends React.Component {
         constructor(props) {
