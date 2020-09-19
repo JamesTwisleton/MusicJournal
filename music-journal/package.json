@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.2",
-    "cookie-parser": "^1.4.5",
+    "cookies": "^0.8.0",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
     "firebase": "^7.21.0",
