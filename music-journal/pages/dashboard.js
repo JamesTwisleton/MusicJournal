@@ -6,7 +6,7 @@ class Dashboard extends React.Component {
  render() {
    return (
      <Layout>
-     <div>          
+     <div>
           <h1>Dashboard  Page</h1>
            <p>You can't go into this page if you are not authenticated.</p>
       </div>

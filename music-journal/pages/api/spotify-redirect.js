@@ -1,7 +1,7 @@
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
-const Cookies = require('cookies');
 const SpotifyWebApi = require('spotify-web-api-node');
+const cookies = require('js-cookie');
 
 if(!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
@@ -17,9 +17,10 @@ const Spotify = new SpotifyWebApi({
 });
 
 export default function handler(req, res) {
-  const cookies = new Cookies(req, res);
+  console.log('wow');
+  console.log(cookies.getJSON());
   try {
-      console.log('Received verification state:', cookies.get('verificationState'));
+      console.log('Received verification state:', cookies.get('state'));
       console.log('Received state:', req.query.state);
       if (!cookies.get('verificationState')) {
         throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -52,9 +53,9 @@ export default function handler(req, res) {
         });
       });
   } catch (error) {
-    res.send('error');
+    return res.send(error);
   }
-  res.send('wow');
+  return res.send('wow');
 }
 
 
