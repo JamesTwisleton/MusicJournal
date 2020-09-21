@@ -49,9 +49,10 @@ export default function handler(req, res) {
         console.log('Firebase token creation successful.');
         console.log(firebaseToken);
         cookies.set('firebaseToken', firebaseToken);
-        res.send(firebaseToken);
-        
-        // Serve an HTML page that signs the user in and updates the user profile.
+        res.writeHead(301, {
+          Location: 'http://localhost:3000',
+        });
+        res.end();        // Serve an HTML page that signs the user in and updates the user profile.
         // res.jsonp({token: firebaseToken});
 
       });

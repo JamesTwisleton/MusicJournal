@@ -12,21 +12,21 @@ const withAuth = (Component) => {
         static async getInitialProps(ctx) {
             // calls page's `getInitialProps` and fills `appProps.pageProps`
             const { firebaseToken } = cookies(ctx);
-            
+
             // const res = await (await fetch(`http://localhost:3000/api/get-user?token=${firebaseToken}`)).json();
 
             // return { res }
-            if(!firebaseToken) {
-                return {};
+            if (!firebaseToken) {
+                  return {}
             }
             firebase.auth().signInWithCustomToken(firebaseToken)
-                .catch(function(error) {
+                .catch(function (error) {
                     console.log(false);
                 });
 
             const user = firebase.auth().currentUser;
 
-            return {user};
+            return { user };
         }
 
         constructor(props) {
@@ -35,12 +35,16 @@ const withAuth = (Component) => {
                 status: 'LOADING',
             }
         }
-        
+
         componentDidMount() {
             if (this.props.user) {
                 console.log(true);
+                this.setState({
+                    status: 'SIGNED_IN'
+                });
             } else {
                 console.log(false);
+                router.push('/api/spotify-auth');
             }
             // auth.onAuthStateChanged(authUser => {
             //     if (authUser) {
