@@ -3,7 +3,7 @@ const serviceAccount = require('../../service-account.json');
 const Cookies = require('cookies');
 const SpotifyWebApi = require('spotify-web-api-node');
 
-if(!firebaseAdmin.apps.length) {
+if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount),
     databaseURL: process.env.FIREBASE_DATABASE_URL,
@@ -19,42 +19,47 @@ const Spotify = new SpotifyWebApi({
 export default function handler(req, res) {
   const cookies = new Cookies(req, res);
   try {
-      console.log('Received verification state:', cookies.get('verificationState'));
-      console.log('Received state:', req.query.state);
-      if (!cookies.get('verificationState')) {
-        throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
-      } else if (cookies.get('verificationState') !== req.query.state) {
-        throw new Error('State validation failed');
+    // console.log('Received verification state:', cookies.get('verificationState'));
+    // console.log('Received state:', req.query.state);
+    if (!cookies.get('verificationState')) {
+      throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+    } else if (cookies.get('verificationState') !== req.query.state) {
+      throw new Error('State validation failed');
+    }
+    // console.log('Received auth code:', req.query.code);
+    Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
+      console.log(error);
+      if (error) {
+        throw error;
       }
-      console.log('Received auth code:', req.query.code);
-      Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
-        console.log(error);
+      console.log('Received Access Token:', data.body['access_token']);
+      Spotify.setAccessToken(data.body['access_token']);
+
+      Spotify.getMe(async (error, userResults) => {
         if (error) {
           throw error;
         }
-        console.log('Received Access Token:', data.body['access_token']);
-        Spotify.setAccessToken(data.body['access_token']);
+        console.log('Auth code exchange result received:', userResults);
+        const accessToken = data.body['access_token'];
+        const spotifyUserID = userResults.body['id'];
+        const profilePic = userResults.body['images'][0]['url'];
+        const userName = userResults.body['display_name'];
+        const email = userResults.body['email'];
+        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
+        console.log('Firebase token creation successful.');
+        console.log(firebaseToken);
+        cookies.set('firebaseToken', firebaseToken);
+        res.send(firebaseToken);
+        
+        // Serve an HTML page that signs the user in and updates the user profile.
+        // res.jsonp({token: firebaseToken});
 
-        Spotify.getMe(async (error, userResults) => {
-          if (error) {
-            throw error;
-          }
-          console.log('Auth code exchange result received:', userResults);
-          const accessToken = data.body['access_token'];
-          const spotifyUserID = userResults.body['id'];
-          const profilePic = userResults.body['images'][0]['url'];
-          const userName = userResults.body['display_name'];
-          const email = userResults.body['email'];
-
-          const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-          // Serve an HTML page that signs the user in and updates the user profile.
-          // res.jsonp({token: firebaseToken});
-        });
       });
+    });
   } catch (error) {
     res.send('error');
   }
-  res.send('wow');
+  // res.send('wow');
 }
 
 
@@ -81,16 +86,16 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
   }).catch((error) => {
     // If user does not exists we create it.
     if (error.code === 'auth/user-not-found') {
-      return firebaseAdmin.auth().createUser({
+      const user = firebaseAdmin.auth().createUser({
         uid: uid,
         displayName: displayName,
         photoURL: photoURL,
         email: email,
         emailVerified: true,
       });
-    }
+      }
     throw error;
-  });
+    });
 
   // Wait for all async tasks to complete, then generate and return a custom auth token.
   await Promise.all([userCreationTask, databaseTask]);
