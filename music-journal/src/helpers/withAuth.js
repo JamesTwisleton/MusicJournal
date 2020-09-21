@@ -13,9 +13,6 @@ const withAuth = (Component) => {
             // calls page's `getInitialProps` and fills `appProps.pageProps`
             const { firebaseToken } = cookies(ctx);
 
-            // const res = await (await fetch(`http://localhost:3000/api/get-user?token=${firebaseToken}`)).json();
-
-            // return { res }
             if (!firebaseToken) {
                   return {}
             }
@@ -44,7 +41,7 @@ const withAuth = (Component) => {
                 });
             } else {
                 console.log(false);
-                router.push('/api/spotify-auth');
+                router.push('/login');
             }
             // auth.onAuthStateChanged(authUser => {
             //     if (authUser) {

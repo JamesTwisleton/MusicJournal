@@ -7,8 +7,8 @@ class Dashboard extends React.Component {
    return (
      <Layout>
      <div>          
-          <h1>Dashboard  Page</h1>
-   <p>Hi {this.props.user.email}</p>
+        <h1>Dashboard  Page</h1>
+        <p>Hi {this.props.user.email}</p>
       </div>
       </Layout>
      )
