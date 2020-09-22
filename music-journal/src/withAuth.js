@@ -1,8 +1,6 @@
 import React from 'react';
 import router from 'next/router';
-import { firebase } from '.';
-import { useCookies } from 'react-cookie';
-import { app } from 'firebase';
+import { firebase } from './initFirebase';
 import cookies from 'next-cookies'
 
 const withAuth = (Component) => {
@@ -10,7 +8,6 @@ const withAuth = (Component) => {
     return class extends React.Component {
 
         static async getInitialProps(ctx) {
-            // calls page's `getInitialProps` and fills `appProps.pageProps`
             const { firebaseToken } = cookies(ctx);
 
             if (!firebaseToken) {

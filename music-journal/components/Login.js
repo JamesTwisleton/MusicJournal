@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { auth, firebase } from '../src';
+import { auth, firebase } from '../src/initFirebase';
 import router from 'next/router';
 import { Container, Row, Col, Button, Image } from 'react-bootstrap/';
 
@@ -41,10 +41,14 @@ class Login extends React.Component {
         <Container>
           <Row className="justify-content-center" xs={12}>
             <h1>Welcome!</h1>
+            
+          </Row>
+          <Row className="text-center" onClick={this.handleSignIn}>
+          <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
           </Row>
           <Row className="justify-content-center">
             <Button variant="dark" onClick={this.handleSignIn}>
-              <Image src="spotify-logo.png" fluid />Login with Spotify to continue</Button>{' '}
+              <Image src="spotify-logo.png" fluid />Login with Spotify to continue</Button>
           </Row>
         </Container>
 
@@ -52,7 +56,7 @@ class Login extends React.Component {
       
       .btn-dark
       {
-        width: 30%;    
+        width: 25%;    
       }
     `}</style>
 

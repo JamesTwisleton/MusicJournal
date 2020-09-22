@@ -1,7 +1,7 @@
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
+const Cookies = require('cookies');
 const SpotifyWebApi = require('spotify-web-api-node');
-const cookies = require('js-cookie');
 
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
@@ -17,9 +17,9 @@ const Spotify = new SpotifyWebApi({
 });
 
 export default function handler(req, res) {
-  console.log('wow');
-  console.log(cookies.getJSON());
+  const cookies = new Cookies(req, res);
   try {
+    console.log(cookies);
     if (!cookies.get('verificationState')) {
       console.error('verificationState cookie not set');
       throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -51,13 +51,12 @@ export default function handler(req, res) {
         res.writeHead(301, {
           Location: '/',
         });
-        res.end();        // Serve an HTML page that signs the user in and updates the user profile.
-        // res.jsonp({token: firebaseToken});
+        res.end();
 
       });
     });
   } catch (error) {
-    return res.send(error);
+    res.send('error');
   }
 }
 
