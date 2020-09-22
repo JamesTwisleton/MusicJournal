@@ -19,16 +19,14 @@ const Spotify = new SpotifyWebApi({
 export default function handler(req, res) {
   const cookies = new Cookies(req, res);
   try {
-    // console.log('Received verification state:', cookies.get('verificationState'));
-    // console.log('Received state:', req.query.state);
     if (!cookies.get('verificationState')) {
+      console.error('verificationState cookie not set');
       throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
     } else if (cookies.get('verificationState') !== req.query.state) {
       throw new Error('State validation failed');
     }
-    // console.log('Received auth code:', req.query.code);
     Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
-      console.log(error);
+      console.error(error);
       if (error) {
         throw error;
       }
@@ -50,7 +48,7 @@ export default function handler(req, res) {
         console.log(firebaseToken);
         cookies.set('firebaseToken', firebaseToken);
         res.writeHead(301, {
-          Location: 'http://localhost:3000',
+          Location: '/',
         });
         res.end();        // Serve an HTML page that signs the user in and updates the user profile.
         // res.jsonp({token: firebaseToken});
@@ -60,7 +58,6 @@ export default function handler(req, res) {
   } catch (error) {
     res.send('error');
   }
-  // res.send('wow');
 }
 
 

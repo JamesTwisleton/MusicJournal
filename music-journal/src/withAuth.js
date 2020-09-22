@@ -1,6 +1,6 @@
 import React from 'react';
 import router from 'next/router';
-import { firebase } from '../firebase';
+import { firebase } from '.';
 import { useCookies } from 'react-cookie';
 import { app } from 'firebase';
 import cookies from 'next-cookies'
@@ -43,15 +43,6 @@ const withAuth = (Component) => {
                 console.log(false);
                 router.push('/login');
             }
-            // auth.onAuthStateChanged(authUser => {
-            //     if (authUser) {
-            //         this.setState({
-            //             status: 'SIGNED_IN'
-            //         });
-            //     } else {
-            //         router.push('/login');
-            //     }
-            // });
         }
         renderContent() {
             const { status } = this.state;
