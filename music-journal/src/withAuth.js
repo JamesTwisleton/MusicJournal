@@ -32,7 +32,6 @@ const withAuth = (Component) => {
 
         componentDidMount() {
             if (this.props.user) {
-                console.log(true);
                 this.setState({
                     status: 'SIGNED_IN'
                 });

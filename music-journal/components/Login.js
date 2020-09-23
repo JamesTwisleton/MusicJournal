@@ -43,7 +43,7 @@ class Login extends React.Component {
             <h1>Welcome!</h1>
             
           </Row>
-          <Row className="text-center" onClick={this.handleSignIn}>
+          <Row className="text-center">
           <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
           </Row>
           <Row className="justify-content-center">
