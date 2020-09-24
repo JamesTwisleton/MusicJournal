@@ -1,10 +1,10 @@
 export default async function handler(req, res) {
-    console.log(req.body);
     let song = req.body.song;
     let text = req.body.content;
     const firebaseAdmin = require('firebase-admin');
     const firebase = require('firebase');
     const serviceAccount = require('../../service-account.json');
+
     const { v4: uuid } = require('uuid');
     if (!firebaseAdmin.apps.length) {
         firebaseAdmin.initializeApp({

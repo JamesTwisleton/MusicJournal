@@ -24,7 +24,8 @@ const withAuth = (Component) => {
         }
 
         constructor(props) {
-            super("authProps", props);
+            super(props);
+            console.log(props);
             this.state = {
                 status: 'LOADING',
             }
