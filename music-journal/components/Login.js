@@ -21,7 +21,7 @@ class Login extends React.Component {
       alert('Logout successful');
     }).catch(function (error) {
       alert('OOps something went wrong check your console');
-      console.log(err);
+      // console.log(err);
     });
   }
 

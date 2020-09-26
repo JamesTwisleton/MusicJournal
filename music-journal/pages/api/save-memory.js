@@ -19,10 +19,6 @@ export default async function handler(req, res) {
     await Promise.all([saveSong, saveText]);
     res.writeHead(301, {
         Location: '/',
-    });
-    res.end();
-
-
-
+    }).end();
 
 }

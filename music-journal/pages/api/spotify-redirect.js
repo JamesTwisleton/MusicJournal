@@ -19,7 +19,6 @@ const Spotify = new SpotifyWebApi({
 export default function handler(req, res) {
   const cookies = new Cookies(req, res);
   try {
-    console.log(cookies);
     if (!cookies.get('verificationState')) {
       console.error('verificationState cookie not set');
       throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -31,22 +30,19 @@ export default function handler(req, res) {
       if (error) {
         throw error;
       }
-      console.log('Received Access Token:', data.body['access_token']);
       Spotify.setAccessToken(data.body['access_token']);
 
       Spotify.getMe(async (error, userResults) => {
         if (error) {
           throw error;
         }
-        console.log('Auth code exchange result received:', userResults);
         const accessToken = data.body['access_token'];
         const spotifyUserID = userResults.body['id'];
         const profilePic = userResults.body['images'][0]['url'];
         const userName = userResults.body['display_name'];
         const email = userResults.body['email'];
         const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-        console.log('Firebase token creation successful.');
-        console.log(firebaseToken);
+        // console.log('Firebase token creation successful.');
         cookies.set('firebaseToken', firebaseToken);
         res.writeHead(301, {
           Location: '/',

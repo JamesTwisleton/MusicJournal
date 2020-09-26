@@ -15,7 +15,6 @@ const withAuth = (Component) => {
             }
             firebase.auth().signInWithCustomToken(firebaseToken)
                 .catch(function (error) {
-                    console.log(false);
                 });
 
             const user = firebase.auth().currentUser;
@@ -25,7 +24,7 @@ const withAuth = (Component) => {
 
         constructor(props) {
             super(props);
-            console.log(props);
+            
             this.state = {
                 status: 'LOADING',
             }
@@ -37,7 +36,6 @@ const withAuth = (Component) => {
                     status: 'SIGNED_IN'
                 });
             } else {
-                console.log(false);
                 router.push('/login');
             }
         }

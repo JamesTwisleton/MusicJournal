@@ -15,6 +15,5 @@ export default async function handler(req, res) {
     ref.orderByValue().on("value", function (snapshot) {
         spotifyToken = snapshot.node_.value_;
     });
-    console.log(spotifyToken);
     res.status(200).json('ok');
 }
