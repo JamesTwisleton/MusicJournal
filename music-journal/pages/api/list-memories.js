@@ -21,10 +21,8 @@ export default async function handler(req, res) {
     await ref.orderByValue().once("value", snapshot => {
         let memories = [];
         snapshot.forEach(data => {
-            // console.log(data.val());
             memories.push(data.val());
         });
-        // return memories;
         res.send(
             memories
         );
