@@ -42,13 +42,11 @@ export default function handler(req, res) {
         const userName = userResults.body['display_name'];
         const email = userResults.body['email'];
         const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-        // console.log('Firebase token creation successful.');
         cookies.set('firebaseToken', firebaseToken);
         res.writeHead(301, {
           Location: '/',
         });
         res.end();
-
       });
     });
   } catch (error) {

@@ -44,14 +44,12 @@ class ListMemories extends React.Component {
 
   componentDidMount() {
     fetcher('/api/list-memories').then((json) => {
-      console.log(json);
       this.setState({
         "memories": json
       });
       if(this.state.memories.length) {
         this.populateMemoriesTable(this.state.memories);
       }
-    
     });
   }
 
