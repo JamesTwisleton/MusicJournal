@@ -13,7 +13,6 @@ function Layout({ children }) {
       div#__next > div > div {
         height: 100%;    
         background: linear-gradient(to bottom, #FFFFFF, #000000);
-
       }
     `}</style>
         </div></>

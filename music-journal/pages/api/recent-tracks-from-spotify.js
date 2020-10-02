@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         redirectUri: process.env.AUTH_REDIRECT_URL,
-      });
+    });
 
     const user = firebase.auth().currentUser;
     const ref = await firebaseAdmin.database().ref(`/spotifyAccessToken/${user.uid}`);
@@ -23,9 +23,27 @@ export default async function handler(req, res) {
     await ref.orderByValue().once("value", snapshot => {
         spotifyToken = snapshot.node_.value_;
         console.log(spotifyToken);
-        res.send('got spotify token');
+        Spotify.setAccessToken(spotifyToken);
+        let recentSongs = [];
+        Spotify.getMyRecentlyPlayedTracks({
+            limit: 20
+        }).then(function (data) {
+            //higher number = more time since listened
+            let recentTrackOrder = 0;
+            data.body.items.forEach(item => {
+                console.log(item.track);
+                recentSongs.push({
+                    position: recentTrackOrder,
+                    trackName: item.track.name,
+                    description: `${item.track.name} by ${item.track.artists[0].name}`,
+                    image: item.track.album.images[0],
+                    track: item.track,
+                });
+                recentTrackOrder += 1;
+            });
+            res.send(recentSongs);
+        }, function (err) {
+            console.log('Something went wrong!', err);
+        });
     });
-
-
-    
 }
