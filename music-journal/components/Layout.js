@@ -14,6 +14,7 @@ function Layout({ children }) {
         height: 100%;    
         background: linear-gradient(to bottom, #FFFFFF, #000000);
       }
+
     `}</style>
         </div></>
 }
