@@ -53,13 +53,10 @@ class RecentTracks extends React.Component {
                     transform: 'scale(1,1)',
                     height: '100vh'
                 } : {}}>
-                <Row style={{ height: '100vh' }}>
-                    <Col xs={6} onClick={() => this.moveCarousel(-1)}>
-                    </Col>
-                    <Col xs={6} onClick={() => this.moveCarousel(1)}>
-                    </Col>
-                </Row>
-
+                <div  style={{ height: '100%', width: '100%' }}>
+                    <div style={{ height: '100%', float: 'left', width: '50%' }} onClick={() => this.moveCarousel(-1)}></div>
+                    <div style={{  height: '100%', float: 'left', width: '50%' }} onClick={() => this.moveCarousel(1)}></div>
+                </div>
 
                 <p style={{
                     background: 'black',
