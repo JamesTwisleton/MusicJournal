@@ -8,7 +8,7 @@ const fetcher = (url) =>
 
 
 class RecentTracks extends React.Component {
-    
+
     static async getInitialProps(ctx) {
         const { firebaseToken } = cookies(ctx);
         if (!firebaseToken) {
@@ -35,64 +35,46 @@ class RecentTracks extends React.Component {
         });
     }
 
-    moveCarousel() {
-        this.setState({ carouselIndex: (this.state.carouselIndex + 1) % this.state.recentTracks.length })
+    moveCarousel(index) {
+        let nextIndex = this.state.carouselIndex + index
+        if(nextIndex < 0) {
+            nextIndex = this.state.recentTracks.length - 1
+        }
+        this.setState({ carouselIndex: nextIndex % this.state.recentTracks.length })
         console.log(this.state.carouselIndex)
     }
 
     render() {
         return (
-            <div onClick={this.moveCarousel}
-                className="backgroundDiv" 
+            <div
+                className="backgroundDiv"
                 style={this.state.recentTracks.length > 0 ? {
-                    background: `url(${this.state.recentTracks[this.state.carouselIndex].image.url}) center center/cover no-repeat fixed`, 
+                    background: `url(${this.state.recentTracks[this.state.carouselIndex].image.url}) center center/cover no-repeat fixed`,
                     transform: 'scale(1,1)',
-                    height: '100vh'} : {}}>
-                        <NavigationBar />
-                        <p style={{ 
-                            background: 'black',
-                            color: 'white',
-                            fontSize: '50px',
-                            textAlign: 'center',
-                            opacity: '.8',
-                            position: 'absolute',
-                            bottom: '0'
-                            }}>
-                            { this.state.recentTracks.length > 0 ? this.state.recentTracks[this.state.carouselIndex].description : ''}
-                        </p>
-                {/* <Carousel indicators={false}>
-                    {this.state.recentTracks.map(track =>
-                        <Carousel.Item key={track.position}>
-                            <img width="100%" src={track.image.url} alt={track.description} />
-                            <Carousel.Caption class="trackdescription"><p>{track.description}</p></Carousel.Caption>
-                        </Carousel.Item>
-                    )}
-                </Carousel> */}
+                    height: '100vh'
+                } : {}}>
+                <Row style={{ height: '100vh' }}>
+                    <Col xs={6} onClick={() => this.moveCarousel(-1)}>
+                    </Col>
+                    <Col xs={6} onClick={() => this.moveCarousel(1)}>
+                    </Col>
+                </Row>
+
+
+                <p style={{
+                    background: 'black',
+                    color: 'white',
+                    fontSize: '50px',
+                    textAlign: 'center',
+                    opacity: '.8',
+                    position: 'absolute',
+                    bottom: '0'
+                }}>
+                    {this.state.recentTracks.length > 0 ? this.state.recentTracks[this.state.carouselIndex].description : ''}
+                </p>
+
+
             </div>
-    //         <Col xs={12} class="recenttrackscontainer">
-    //             <Row >
-    //                 <Col xs={12}>
-    //                     <Carousel indicators={false}>
-    //                         {this.state.recentTracks.map(track =>
-    //                             <Carousel.Item key={track.position}>
-    //                                 <img width="100%" src={track.image.url} alt={track.description} />
-    //                                 <Carousel.Caption class="trackdescription"><p>{track.description}</p></Carousel.Caption>
-    //                             </Carousel.Item>
-    //                         )}
-    //                     </Carousel>
-    //                 </Col>
-    //             </Row>
-    //     <style global jsx>{`
-  
-    //     .trackdescription {
-    //         border-radius: 0px 0px 20px 20px;
-    //         height: 100%;    
-    //         color:white;
-    //         background: black;
-    //         text-align: center;
-    //     }
-    // `}</style>
-    //         </Col>
         )
     }
 }

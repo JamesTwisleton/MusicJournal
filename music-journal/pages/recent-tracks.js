@@ -7,20 +7,7 @@ import { Container, Row } from 'react-bootstrap/';
 class Dashboard extends React.Component {
   render() {
     return (
-      <div>
         <RecentTracks />
-      </div>
-      // <Layout>
-      //   <Container fluid>
-      //     <Row xs={12} >
-      //       <h1>Hi {this.props.user.displayName}!</h1>
-      //     </Row>
-      //     <hr />
-      //     <Row>
-      //       <RecentTracks />
-      //     </Row>
-      //   </Container>
-      // </Layout>
     )
   }
 }
