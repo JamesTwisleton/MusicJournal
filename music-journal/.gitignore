@@ -87,7 +87,7 @@ service-account.json
 /coverage
 
 # next.js
-/.next/
+src/client/.next/
 /out/
 
 # production
