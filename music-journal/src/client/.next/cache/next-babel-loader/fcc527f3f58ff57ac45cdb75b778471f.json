@@ -1,0 +1,1 @@
+{"ast":null,"code":"var __jsx = React.createElement;\nimport React from 'react';\nimport RecentTracks from '../components/RecentTracks';\nimport withAuth from '../src/withAuth';\n\nvar Dashboard = function Dashboard() {\n  return __jsx(RecentTracks, null);\n};\n\nexport default withAuth(Dashboard);","map":null,"metadata":{},"sourceType":"module"}
