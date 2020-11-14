@@ -28,4 +28,5 @@
 - [x] Displaying a users recent Spotify tracks
 - [ ] Ability to select a recent track and tag a location
 - [ ] Ability to see all tagged tracks on a map
+- [ ] Deploy to Firebase
 - [ ] ???
