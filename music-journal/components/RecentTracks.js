@@ -17,8 +17,7 @@ class RecentTracks extends React.Component {
         return { firebaseToken };
     }
 
-    constructor(props) {
-        super(props);
+    constructor() {        
         this.state = {
             recentTracks: [],
             carouselIndex: 0,
@@ -29,7 +28,6 @@ class RecentTracks extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(() => console.log('Hello, World!'), 3000);
         setInterval(() => {
             if (this.state.scaleRatio > .2) {
                 this.setState({scaleDirection: -1})
@@ -37,7 +35,7 @@ class RecentTracks extends React.Component {
             if (this.state.scaleRatio < 0) {
                 this.setState({scaleDirection: 1})
             }
-            this.setState({scaleRatio: this.state.scaleRatio + (.00009 * this.state.scaleDirection) }, () => console.log(this.state.scaleRatio));
+            this.setState({scaleRatio: this.state.scaleRatio + (.0009 * this.state.scaleDirection) }, () => console.log(this.state.scaleRatio));
         }, 10);
         fetcher('/api/recent-tracks-from-spotify').then((json) => {
             this.setState({
