@@ -7,7 +7,7 @@
 
 * Populate .env and service-account.json
 
-`npm install`
+* `npm install`
 
 ## Running Locally
 
