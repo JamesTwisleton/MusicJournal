@@ -41,10 +41,14 @@ class Login extends React.Component {
         <Container>
           <Row className="justify-content-center" xs={12}>
             <h1>Welcome!</h1>
-            
+
           </Row>
           <Row className="text-center">
-          <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
+            <Container>
+
+
+              <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
+            </Container>
           </Row>
           <Row className="justify-content-center">
             <Button variant="dark" onClick={this.handleSignIn}>

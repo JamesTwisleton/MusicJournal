@@ -1,7 +1,7 @@
 import { NavigationBar } from './NavigationBar';
 function Layout({ children }) {
     return <>
-        <NavigationBar />
+        {/* <NavigationBar /> */}
         <div>
             {children}
             <style global jsx>{`
