@@ -21,10 +21,10 @@
 
 ## Features
 
-[x] Spotify authentication with Firebase
-[x] Saving data to Firebase
-[x] Pulling data (including Spotify credentials) from Firebase
-[x] Displaying recent tracks of a logged in user
-[ ] Ability to select a recent track and tag a location
-[ ] Ability to see all tagged tracks on a map
-[ ] ???
+- [x] Spotify authentication with Firebase
+- [x] Saving data to Firebase
+- [x] Pulling data (including Spotify credentials) from Firebase
+- [x] Displaying recent tracks of a logged in user
+- [ ] Ability to select a recent track and tag a location
+- [ ] Ability to see all tagged tracks on a map
+- [ ] ???
