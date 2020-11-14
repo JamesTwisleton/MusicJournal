@@ -23,7 +23,6 @@ export default async function handler(req, res) {
     
     await ref.orderByValue().once("value", snapshot => {
         spotifyToken = snapshot.node_.value_;
-        console.log(spotifyToken);
         Spotify.setAccessToken(spotifyToken);
         let recentSongs = [];
         Spotify.getMyRecentlyPlayedTracks({

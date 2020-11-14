@@ -3,7 +3,7 @@ import NavigationBar from './NavigationBar';
 const Layout = ({ children }) => {
   return (
     <>
-      <NavigationBar />
+      {/*<NavigationBar />*/}
       <div>
         {children}
         <style global jsx>{`
