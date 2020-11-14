@@ -26,7 +26,6 @@ export default function handler(req, res) {
       throw new Error('State validation failed');
     }
     Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
-      console.error(error);
       if (error) {
         throw error;
       }
@@ -54,7 +53,6 @@ export default function handler(req, res) {
   }
 }
 
-
 /**
  * Creates a Firebase account with the given user profile and returns a custom auth token allowing
  * signing-in this account.
@@ -78,16 +76,17 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
   }).catch((error) => {
     // If user does not exists we create it.
     if (error.code === 'auth/user-not-found') {
-      const user = firebaseAdmin.auth().createUser({
+      firebaseAdmin.auth().createUser({
         uid: uid,
         displayName: displayName,
         photoURL: photoURL,
         email: email,
         emailVerified: true,
       });
-      }
-    throw error;
-    });
+    } else {
+      throw error;
+    }
+  });
 
   // Wait for all async tasks to complete, then generate and return a custom auth token.
   await Promise.all([userCreationTask, databaseTask]);
