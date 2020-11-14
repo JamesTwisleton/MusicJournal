@@ -1,67 +1,32 @@
-
+import { useEffect, useState } from 'react';
 import { Row, Col, Table } from 'react-bootstrap/';
 
-
+//TODO: Move to services
 const fetcher = (url) =>
   fetch(url, {
     method: 'GET',
-  }).then((res) => res.json());
+}).then((res) => res.json());
 
+const ListMemories = ({ firebaseToken }) => {
+  const [memories, setMemories] = useState({}); 
 
-class ListMemories extends React.Component {
-  static async getInitialProps(ctx) {
-    const { firebaseToken } = cookies(ctx);
-    if (!firebaseToken) {
-      return {}
-    }
-    return { firebaseToken };
-  }
-
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  populateMemoriesTable(memories) {
-    document.getElementById("nomemories").remove();
-    let tableBody = document.getElementById("memoriestablebody");
-    let tableLength = 5;
-    if(memories.length < 5) {
-      tableLength = memories.length;
-    }
-    for (let i = 0; i < tableLength; i++) {
-      let tableRow = document.createElement('tr');
-      let songColumn = document.createElement('td');
-      let memoryColumn = document.createElement('td');
-      songColumn.innerHTML = memories[i].song;
-      memoryColumn.innerHTML = memories[i].text;
-      tableRow.appendChild(songColumn);
-      tableRow.appendChild(memoryColumn);
-      tableBody.appendChild(tableRow);
-    }
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     fetcher('/api/list-memories').then((json) => {
-      this.setState({
-        "memories": json
-      });
-      if(this.state.memories.length) {
-        this.populateMemoriesTable(this.state.memories);
-      }
+      setMemories(json);
     });
+  }, []);
+
+  if (!memories || memories.length < 1) {
+    return <p id="nomemories">You havent added any memories yet.....</p>
   }
 
-  render() {
-    return (<>
+  return (
+    <>
       <Col xs={6}>
         <Row className="justify-content-center" xs={12} >
           <h4>Your Top Memories</h4>
         </Row>
         <Row className="justify-content-center">
-
-          <p id="nomemories">You havent added any memories yet.....</p>
 
           <Table striped bordered hover size="sm" id="memoriestable">
             <thead>
@@ -71,12 +36,26 @@ class ListMemories extends React.Component {
               </tr>
             </thead>
             <tbody id="memoriestablebody">
+              {memories.length > 0 && memories.map(memory => 
+                <tr key={memory.song}>
+                  <td>{memory.song}</td>
+                  <td>{memory.text}</td>
+                </tr>
+              )}
             </tbody>
           </Table>
         </Row>
       </Col>
-    </>)
+    </>
+  )
+}
+
+ListMemories.getInitialProps = async (ctx) => {
+  const { firebaseToken } = cookies(ctx);
+  if (!firebaseToken) {
+    return {}
   }
+  return { firebaseToken };
 }
 
 export default ListMemories;

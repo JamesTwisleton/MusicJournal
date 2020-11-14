@@ -20,6 +20,7 @@ export default async function handler(req, res) {
     const user = firebase.auth().currentUser;
     const ref = await firebaseAdmin.database().ref(`/spotifyAccessToken/${user.uid}`);
     let spotifyToken;
+    
     await ref.orderByValue().once("value", snapshot => {
         spotifyToken = snapshot.node_.value_;
         console.log(spotifyToken);

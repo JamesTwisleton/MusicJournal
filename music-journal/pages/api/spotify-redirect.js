@@ -85,9 +85,9 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
         email: email,
         emailVerified: true,
       });
-      }
+    }
     throw error;
-    });
+  });
 
   // Wait for all async tasks to complete, then generate and return a custom auth token.
   await Promise.all([userCreationTask, databaseTask]);

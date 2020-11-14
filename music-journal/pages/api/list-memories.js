@@ -1,9 +1,8 @@
-
-
 export default async function handler(req, res) {
     const firebaseAdmin = require('firebase-admin');
     const firebase = require('firebase');
     const serviceAccount = require('../../service-account.json');
+    
     if (!firebaseAdmin.apps.length) {
         firebaseAdmin.initializeApp({
             credential: firebaseAdmin.credential.cert(serviceAccount),
@@ -17,6 +16,7 @@ export default async function handler(req, res) {
             authenticated: false
         });
     }
+
     const ref = await firebaseAdmin.database().ref(`/memory/${user.uid}`);
     await ref.orderByValue().once("value", snapshot => {
         let memories = [];
@@ -27,6 +27,4 @@ export default async function handler(req, res) {
             memories
         );
     });
-
-
 }
