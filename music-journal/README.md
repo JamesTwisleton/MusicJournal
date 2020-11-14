@@ -1,5 +1,8 @@
 # music-journal
 
+![music-journal diagram](images/MusicJournal.png)
+
+
 ## Installation
 
 * Populate .env and service-account.json
