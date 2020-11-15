@@ -1,6 +1,6 @@
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
-const Cookies = require('cookies');
+
 const SpotifyWebApi = require('spotify-web-api-node');
 
 if (!firebaseAdmin.apps.length) {
@@ -17,40 +17,48 @@ const Spotify = new SpotifyWebApi({
 });
 
 export default function handler(req, res) {
-  const cookies = new Cookies(req, res);
+  console.log(req.cookies);
   try {
-    if (!cookies.get('verificationState')) {
-      console.error('verificationState cookie not set');
-      throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
-    } else if (cookies.get('verificationState') !== req.query.state) {
-      throw new Error('State validation failed');
-    }
-    Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
-      if (error) {
-        throw error;
+    cookieParser()(req, res, () => {
+      console.log('Received verification state:', req.cookies.state);
+      console.log('Received state:', req.query.state);
+      if (!req.cookies.state) {
+        throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+      } else if (req.cookies.state !== req.query.state) {
+        throw new Error('State validation failed');
       }
-      Spotify.setAccessToken(data.body['access_token']);
+      console.log('Received auth code:', req.query.code);
 
-      Spotify.getMe(async (error, userResults) => {
+      Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
         if (error) {
           throw error;
         }
-        const accessToken = data.body['access_token'];
-        const spotifyUserID = userResults.body['id'];
-        const profilePic = userResults.body['images'][0]['url'];
-        const userName = userResults.body['display_name'];
-        const email = userResults.body['email'];
-        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-        cookies.set('firebaseToken', firebaseToken);
-        res.writeHead(301, {
-          Location: '/',
+        Spotify.setAccessToken(data.body['access_token']);
+
+        Spotify.getMe(async (error, userResults) => {
+          if (error) {
+            throw error;
+          }
+          const accessToken = data.body['access_token'];
+          const spotifyUserID = userResults.body['id'];
+          const profilePic = userResults.body['images'][0]['url'];
+          const userName = userResults.body['display_name'];
+          const email = userResults.body['email'];
+          const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
+          cookies.set('firebaseToken', firebaseToken);
+          res.writeHead(301, {
+            Location: '/',
+          });
+          res.end();
         });
-        res.end();
       });
     });
+
   } catch (error) {
+    console.log(error)
     res.send('error');
   }
+  return null;
 }
 
 /**

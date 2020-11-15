@@ -7,7 +7,7 @@ import { Container, Row, Button, Image } from 'react-bootstrap/';
 const Login = ({ user }) => {
 
   const handleSignIn = () => {
-    router.push('/api/spotify-auth');
+    router.push(`${process.env.SITE_ADDRESS}/api/spotify-auth`);
   }
 
   //This should probably move into the nav
