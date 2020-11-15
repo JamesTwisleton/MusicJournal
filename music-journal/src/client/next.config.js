@@ -28,12 +28,6 @@ if (!firebaseAdmin.apps.length) {
 module.exports = {
     distDir: "../../dist/client",
     trailingSlash: true,
-    exportPathMap: async function () {
-        return {
-            '/': { page: '/' },
-            '/login': { page: '/login' }
-        }
-    },
     webpack: config => {
         const env = Object.keys(process.env).reduce((acc, curr) => {
             acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
