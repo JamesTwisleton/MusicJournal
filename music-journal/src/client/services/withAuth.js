@@ -36,6 +36,8 @@ const withAuth = (Component) => {
                     status: 'SIGNED_IN'
                 });
             } else {
+                console.log('Got to router.push');
+                console.log(router);
                 router.push('/login');
             }
         }
