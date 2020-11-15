@@ -1,65 +1,62 @@
+const SpotifyWebApi = require('spotify-web-api-node');
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
+const Cookies = require('cookies');
+const handler = (req, res) => {
+  if (!firebaseAdmin.apps.length) {
+    firebaseAdmin.initializeApp({
+      credential: firebaseAdmin.credential.cert(serviceAccount),
+      databaseURL: process.env.FIREBASE_DATABASE_URL,
+    });
+  }
 
-const SpotifyWebApi = require('spotify-web-api-node');
-
-if (!firebaseAdmin.apps.length) {
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+  const Spotify = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    redirectUri: process.env.AUTH_REDIRECT_URL,
   });
-}
+  return handleRedirectFromSpotify(req, res, Spotify);
+};
 
-const Spotify = new SpotifyWebApi({
-  clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: process.env.AUTH_REDIRECT_URL,
-});
-
-export default function handler(req, res) {
-  console.log(req.cookies);
+function handleRedirectFromSpotify(req, res, Spotify) {
   try {
-    cookieParser()(req, res, () => {
-      console.log('Received verification state:', req.cookies.state);
-      console.log('Received state:', req.query.state);
-      if (!req.cookies.state) {
-        throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
-      } else if (req.cookies.state !== req.query.state) {
-        throw new Error('State validation failed');
-      }
-      console.log('Received auth code:', req.query.code);
+    const cookies = new Cookies(req, res);
+    if (!cookies.get('verificationState')) {
+      console.error('verificationState cookie not set');
+      throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+    } else if (cookies.get('verificationState') !== req.query.state) {
+      throw new Error('State validation failed');
+    }
+    console.log('Received auth code:', req.query.code);
 
-      Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
+    Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
+      if (error) {
+        throw error;
+      }
+      Spotify.setAccessToken(data.body['access_token']);
+      Spotify.getMe(async (error, userResults) => {
         if (error) {
           throw error;
         }
-        Spotify.setAccessToken(data.body['access_token']);
-
-        Spotify.getMe(async (error, userResults) => {
-          if (error) {
-            throw error;
-          }
-          const accessToken = data.body['access_token'];
-          const spotifyUserID = userResults.body['id'];
-          const profilePic = userResults.body['images'][0]['url'];
-          const userName = userResults.body['display_name'];
-          const email = userResults.body['email'];
-          const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-          cookies.set('firebaseToken', firebaseToken);
-          res.writeHead(301, {
-            Location: '/',
-          });
-          res.end();
+        const accessToken = data.body['access_token'];
+        const spotifyUserID = userResults.body['id'];
+        const profilePic = userResults.body['images'][0]['url'];
+        const userName = userResults.body['display_name'];
+        const email = userResults.body['email'];
+        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
+        res.cookie('firebaseToken', firebaseToken);
+        res.writeHead(301, {
+          Location: process.env.SITE_ADDRESS,
         });
+
+        return res.end();
       });
     });
-
   } catch (error) {
-    console.log(error)
-    res.send('error');
+    return res.send('error');
   }
-  return null;
 }
+
 
 /**
  * Creates a Firebase account with the given user profile and returns a custom auth token allowing
@@ -84,16 +81,15 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
   }).catch((error) => {
     // If user does not exists we create it.
     if (error.code === 'auth/user-not-found') {
-      firebaseAdmin.auth().createUser({
+      return firebaseAdmin.auth().createUser({
         uid: uid,
         displayName: displayName,
         photoURL: photoURL,
         email: email,
         emailVerified: true,
       });
-    } else {
-      throw error;
     }
+    throw error;
   });
 
   // Wait for all async tasks to complete, then generate and return a custom auth token.
@@ -103,3 +99,5 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
   console.log('Created Custom token for UID "', uid, '" Token:', token);
   return token;
 }
+
+export default handler;
