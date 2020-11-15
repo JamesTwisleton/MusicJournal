@@ -1,6 +1,6 @@
 import React from 'react';
 import RecentTracks from '../components/RecentTracks';
-import withAuth from '../src/withAuth';
+import withAuth from '../services/withAuth';
 
 const Dashboard = () => (
   <RecentTracks />

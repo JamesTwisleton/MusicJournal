@@ -2,8 +2,8 @@ import React from 'react';
 import Layout from '../components/Layout';
 import AddMemory from '../components/AddMemory';
 import ListMemories from '../components/ListMemories';
-import withAuth from '../src/withAuth';
-import { firebase } from '../src/initFirebase';
+import withAuth from '../services/withAuth';
+import { firebase } from '../services/initFirebase';
 import { Container, Row } from 'react-bootstrap/';
 
 const Dashboard = ({ user }) => {

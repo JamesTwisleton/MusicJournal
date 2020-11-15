@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import { auth, firebase } from '../src/initFirebase';
+import { auth, firebase } from '../services/initFirebase';
 import router from 'next/router';
 import { Container, Row, Button, Image } from 'react-bootstrap/';
 
