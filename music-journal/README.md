@@ -7,17 +7,18 @@
 
 * Populate .env and service-account.json
 
-* `npm install`
+* `yarn global add firebase-tools`
+* `yarn install`
 
 ## Running Locally
 
-* `npm run dev`
+* `yarn deploy:local`
 
-* Visit http://localhost:3000 in a browser
+* Visit http://localhost:5000 in a browser
 
 * Login with Spotify
 
-* Have a look at http://localhost:3000/recent-tracks
+* Navigate back to http://localhost:5000/ TODO: fix this, it shouldn't bump you back to the login screen
 
 ## Features
 
