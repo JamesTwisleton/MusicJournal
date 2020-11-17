@@ -4,27 +4,19 @@ import { firebase } from './initFirebase';
 import cookies from 'next-cookies'
 
 const withAuth = (Component) => {
+    console.log(Component);
 
     return class extends React.Component {
 
         static async getInitialProps(ctx) {
-            const { firebaseToken } = cookies(ctx);
-
-            if (!firebaseToken) {
-                  return {}
-            }
-            firebase.auth().signInWithCustomToken(firebaseToken)
-                .catch(function (error) {
-                });
-
             const user = firebase.auth().currentUser;
-
+            console.log(user);
             return { user };
         }
 
         constructor(props) {
             super(props);
-            
+        
             this.state = {
                 status: 'LOADING',
             }
@@ -56,6 +48,8 @@ const withAuth = (Component) => {
         }
     };
 }
+
+
 
 
 export default withAuth;

@@ -1,8 +1,9 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
-const Cookies = require('cookies');
 import Cors from 'cors';
+import { firebase } from '../../utils/initFirebase';
+
 const cors = Cors({
   methods: ['GET', 'HEAD'],
 });
@@ -21,6 +22,11 @@ function runMiddleware(req, res, fn) {
   })
 }
 
+function deserialize(serializedJavascript) {
+  console.log(serializedJavascript);
+  return eval('(' + serializedJavascript + ')');
+}
+
 async function handler(req, res) {
   await runMiddleware(req, res, cors);
   if (!firebaseAdmin.apps.length) {
@@ -29,22 +35,17 @@ async function handler(req, res) {
       databaseURL: process.env.FIREBASE_DATABASE_URL,
     });
   }
-
   const Spotify = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.AUTH_REDIRECT_URL,
   });
-  return handleRedirectFromSpotify(req, res, Spotify);
-};
-
-function handleRedirectFromSpotify(req, res, Spotify) {
   try {
-    const cookies = new Cookies(req, res);
-    if (!cookies.get('verificationState')) {
+    let cookie = deserialize(req.cookies.__session);
+    if (!cookie.verificationState) {
       console.error('verificationState cookie not set');
       throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
-    } else if (cookies.get('verificationState') !== req.query.state) {
+    } else if (cookie.verificationState !== req.query.state) {
       throw new Error('State validation failed');
     }
     console.log('Received auth code:', req.query.code);
@@ -64,19 +65,19 @@ function handleRedirectFromSpotify(req, res, Spotify) {
         const userName = userResults.body['display_name'];
         const email = userResults.body['email'];
         const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-        res.cookie('firebaseToken', firebaseToken);
+        const user = await firebase.auth().signInWithCustomToken(firebaseToken)
+          .catch(function (error) {
+          });
         res.writeHead(301, {
-          Location: process.env.SITE_ADDRESS,
-        });
-
-        return res.end();
+          Location: process.env.SITE_ADDRESS
+        }).end();
       });
     });
   } catch (error) {
+    console.log(error);
     return res.send('error');
   }
-}
-
+};
 
 /**
  * Creates a Firebase account with the given user profile and returns a custom auth token allowing

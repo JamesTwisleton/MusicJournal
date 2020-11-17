@@ -2,7 +2,8 @@ const crypto = require('crypto');
 const SpotifyWebApi = require('spotify-web-api-node');
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
-const Cookies = require('cookies');
+const serialize = require('serialize-javascript');
+
 import Cors from 'cors';
 const cors = Cors({
   methods: ['GET', 'HEAD'],
@@ -38,15 +39,17 @@ function runMiddleware(req, res, fn) {
 
 async function handler(req, res) {
   await runMiddleware(req, res, cors);
-  const cookies = new Cookies(req, res);
   const state = req.cookies.state || crypto.randomBytes(20).toString('hex');
-  cookies.set('verificationState', state.toString());
-  cookies.set('maxAge', 3600000);
-  cookies.set('secure', true);
-  cookies.set('httpOnly', true);
+  const serializedCookie = serialize({
+    verificationState: state.toString(),
+    'maxAge': 3600000,
+    'secure': true,
+    'httpOnly': true,
+  });
   const authorizeURL = await Spotify.createAuthorizeURL(OAUTH_SCOPES, state.toString());
   res.writeHead(301, {
-    Location: authorizeURL
+    Location: authorizeURL,
+    'set-cookie': `__session=${serializedCookie}`
   });
 
   return res.end();
