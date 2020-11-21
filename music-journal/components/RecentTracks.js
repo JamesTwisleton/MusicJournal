@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Carousel } from 'react-bootstrap/';
-import { NavigationBar } from '../components/NavigationBar';
+import withAuth from '../utils/withAuth';
 
 //TODO: Move to services
 const fetcher = (url) =>
@@ -8,16 +7,13 @@ const fetcher = (url) =>
         method: 'GET',
     }).then((res) => res.json());
 
-const RecentTracks = ({ firebaseToken }) => {
-
-
+const RecentTracks = (props) => {
     const [carouselIndex, setCarouselIndex] = useState(0);
     const [recentTracks, setRecentTracks] = useState([]);
     const [scaleDirection, setScaleDirection] = useState(1);
     const [scaleRatio, setScaleRatio] = useState(0);
 
     useEffect(() => {
-        // console.log(this.props);
         setInterval(() => {
             if (scaleRatio > .2) {
                 setScaleDirection(-1)
@@ -28,7 +24,7 @@ const RecentTracks = ({ firebaseToken }) => {
             setScaleRatio(scaleRatio + (.00009 * scaleDirection));
         }, 10);
 
-        fetcher('/api/recent-tracks-from-spotify').then((json) => {
+        fetcher(`/api/recent-tracks-from-spotify?token=${props.token}`).then((json) => {
             setRecentTracks(json);
         });
     }, [])
@@ -79,12 +75,4 @@ const RecentTracks = ({ firebaseToken }) => {
     )
 }
 
-RecentTracks.getInitialProps = async (ctx) => {
-    const { firebaseToken } = cookies(ctx);
-    if (!firebaseToken) {
-        return {}
-    }
-    return { firebaseToken };
-}
-
-export default RecentTracks;
+export default withAuth(RecentTracks);

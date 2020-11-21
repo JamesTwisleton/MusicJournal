@@ -14,11 +14,11 @@ const withAuth = (Component) => {
         }
         async componentDidMount() {
             if (document.cookie) {
-                const user = await auth(document.cookie);
-                if (!user) {
+                const token = await auth(document.cookie);
+                if (!token) {
                     router.push('/login');
                 } else {                    
-                    this.props.user = user;
+                    this.props.token = token;
                     this.setState({
                         status: 'SIGNED_IN'
                     });

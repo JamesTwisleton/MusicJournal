@@ -10,5 +10,5 @@ export default async function auth(cookie) {
     if(response.status !== 200) {
         return false;
     }
-    return response.json();
+    return firebaseToken;
 }
