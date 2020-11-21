@@ -76,7 +76,7 @@ async function handler(req, res) {
         await firebase.auth().signInWithCustomToken(firebaseToken);
         return res.writeHead(301, {
           Location: process.env.SITE_ADDRESS,
-          'set-cookie': `__session=${serializedCookie}`
+          'set-cookie': `__session=${serializedCookie}; Path=/`
         }).end();
       });
     });
