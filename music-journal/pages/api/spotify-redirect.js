@@ -1,6 +1,8 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
+const serialize = require('serialize-javascript');
+
 import Cors from 'cors';
 import { firebase } from '../../utils/initFirebase';
 
@@ -23,7 +25,6 @@ function runMiddleware(req, res, fn) {
 }
 
 function deserialize(serializedJavascript) {
-  console.log(serializedJavascript);
   return eval('(' + serializedJavascript + ')');
 }
 

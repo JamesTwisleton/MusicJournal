@@ -16,7 +16,7 @@ const RecentTracks = ({ firebaseToken }) => {
     const [scaleRatio, setScaleRatio] = useState(0);
 
     useEffect(() => {
-        setTimeout(() => console.log('Hello, World!'), 3000);
+        
         setInterval(() => {
             if (scaleRatio > .2) {
                 setScaleDirection(-1)
@@ -25,7 +25,6 @@ const RecentTracks = ({ firebaseToken }) => {
                 setScaleDirection(1)
             }
             setScaleRatio(scaleRatio + (.00009 * scaleDirection));
-            console.log(scaleRatio)
         }, 10);
 
         fetcher('/api/recent-tracks-from-spotify').then((json) => {
@@ -41,7 +40,6 @@ const RecentTracks = ({ firebaseToken }) => {
         }
 
         setCarouselIndex(nextIndex % recentTracks.length);
-        console.log(carouselIndex);
     }
 
     return (

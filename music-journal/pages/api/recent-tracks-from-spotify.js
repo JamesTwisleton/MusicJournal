@@ -30,8 +30,7 @@ export default async function handler(req, res) {
         }).then(function (data) {
             //higher number = more time since listened
             let recentTrackOrder = 0;
-            data.body.items.forEach(item => {
-                console.log(item.track);
+            data.body.items.forEach(item => {                
                 recentSongs.push({
                     position: recentTrackOrder,
                     trackName: item.track.name,
