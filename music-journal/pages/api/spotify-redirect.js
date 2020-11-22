@@ -1,46 +1,37 @@
-const SpotifyWebApi = require('spotify-web-api-node');
-const firebaseAdmin = require('firebase-admin');
-const serviceAccount = require('../../service-account.json');
-const serialize = require('serialize-javascript');
-
+import { auth } from '../../utils/initFirebase';
 import Cors from 'cors';
-import { firebase } from '../../utils/initFirebase';
+import firebaseAdmin from 'firebase-admin';
+import initMiddleware from '../../lib/init-middleware'
+import serviceAccount from '../../service-account.json';
+import serialize from 'serialize-javascript';
+import SpotifyWebApi from 'spotify-web-api-node';
 
-const cors = Cors({
-  methods: ['GET', 'HEAD'],
-});
-
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      return resolve(result)
-    })
+const cors = initMiddleware(
+  Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
   })
-}
+)
 
 function deserialize(serializedJavascript) {
   return eval('(' + serializedJavascript + ')');
 }
 
 async function handler(req, res) {
-  await runMiddleware(req, res, cors);
+  await cors(req, res)
+  
   if (!firebaseAdmin.apps.length) {
     firebaseAdmin.initializeApp({
       credential: firebaseAdmin.credential.cert(serviceAccount),
       databaseURL: process.env.FIREBASE_DATABASE_URL,
     });
   }
+
   const Spotify = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     redirectUri: process.env.AUTH_REDIRECT_URL,
   });
+
   try {
     let cookie = deserialize(req.cookies.__session);
     if (!cookie.verificationState) {
@@ -49,6 +40,7 @@ async function handler(req, res) {
     } else if (cookie.verificationState !== req.query.state) {
       throw new Error('State validation failed');
     }
+
     console.log('Received auth code:', req.query.code);
 
     Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
@@ -60,6 +52,7 @@ async function handler(req, res) {
         if (error) {
           throw error;
         }
+
         const accessToken = data.body['access_token'];
         const spotifyUserID = userResults.body['id'];
         const profilePic = userResults.body['images'][0]['url'];
@@ -73,7 +66,7 @@ async function handler(req, res) {
           'httpOnly': true,
         });
         // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        await firebase.auth().signInWithCustomToken(firebaseToken);
+        await auth.signInWithCustomToken(firebaseToken);
         return res.writeHead(301, {
           Location: process.env.SITE_ADDRESS,
           'set-cookie': `__session=${serializedCookie}; Path=/`

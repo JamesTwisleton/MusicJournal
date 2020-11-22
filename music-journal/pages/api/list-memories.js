@@ -1,8 +1,18 @@
+import { auth } from 'firebase'
+import Cors from 'cors';
+import firebaseAdmin from 'firebase-admin'
+import initMiddleware from '../../lib/init-middleware'
+import serviceAccount from '../../service-account.json'
+
+const cors = initMiddleware(
+    Cors({
+        methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+    })
+)
+
 export default async function handler(req, res) {
-    const firebaseAdmin = require('firebase-admin');
-    const firebase = require('firebase');
-    const serviceAccount = require('../../service-account.json');
-    
+    await cors(req, res)
+
     if (!firebaseAdmin.apps.length) {
         firebaseAdmin.initializeApp({
             credential: firebaseAdmin.credential.cert(serviceAccount),
@@ -10,21 +20,23 @@ export default async function handler(req, res) {
         });
     }
 
-    const user = await firebase.auth().currentUser;
-    if (!user) {
-        res.status(403).json({
-            authenticated: false
-        });
-    }
+    try {
+        const user = await auth().currentUser;
+        if (!user) {
+            res.status(403).json({
+                authenticated: false
+            });
+        }
 
-    const ref = await firebaseAdmin.database().ref(`/memory/${user.uid}`);
-    await ref.orderByValue().once("value", snapshot => {
-        let memories = [];
-        snapshot.forEach(data => {
-            memories.push(data.val());
-        });
-        res.send(
-            memories
-        );
-    });
+        const memoriesRef = await firebaseAdmin.database().ref(`/memory/${user.uid}`);
+
+        let memories = []
+        await memoriesRef.orderByValue().once("value", snapshot => 
+            snapshot.forEach(data => memories.push(data.val()))
+        )
+
+        res.send(memories)
+    } catch (error) {
+        console.log('list', error)
+    }
 }

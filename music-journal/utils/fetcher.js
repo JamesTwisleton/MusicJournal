@@ -1,5 +1,17 @@
-export async function fetcher(url) {
-    return await fetch(url, {
-        method: 'GET',
-    });
+import axios from 'axios'
+
+const fetcher = async (url) => {
+    return await axios.get(url)
 }
+
+const getMemories = async () => {
+    const response = await axios.get('/api/list-memories')
+    return response.data
+}
+
+const addMemory = async (memory, token) => {
+    const response = await axios.post(`/api/save-memory?token=${token}`, memory)
+    return response.data
+}
+
+export { fetcher, getMemories, addMemory }
