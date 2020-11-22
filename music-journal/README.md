@@ -1,6 +1,6 @@
 # music-journal
 
-![music-journal diagram](images/MusicJournal.png)
+![music-journal overall architecture diagram](images/music-journal.png)
 
 
 ## Installation
@@ -31,3 +31,9 @@
 - [ ] Ability to see all tagged tracks on a map
 - [ ] Deploy to Firebase
 - [ ] ???
+
+## Documentation
+
+### How authentication works
+
+![music-journal authentication diagram](images/authentication.png)
