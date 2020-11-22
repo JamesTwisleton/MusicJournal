@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Table } from 'react-bootstrap/';
-
+import withAuth from '../utils/withAuth';
 //TODO: Move to services
 const fetcher = (url) =>
   fetch(url, {
@@ -58,7 +58,7 @@ ListMemories.getInitialProps = async (ctx) => {
   return { firebaseToken };
 }
 
-export default ListMemories;
+export default withAuth(ListMemories);
 
 // <Table striped bordered hover size="sm">
 //             <thead>

@@ -1,28 +1,12 @@
 import { Row, Col, Form, Button } from 'react-bootstrap/';
-
-//TODO: Move this to services folder
-const submitMemory = (requestData) =>
-    fetch('/api/save-memory', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestData)
-    }).then((res) => {
-        if (res.status === 200) {
-            document.getElementById("song").value = "";
-            document.getElementById("memorytext").value = "";
-        }
-    }
-    );
-
-const AddMemory = () => {
-
+import withAuth from '../utils/withAuth';
+import submitMemory from '../utils/submitMemory';
+const AddMemory = (props) => {
     const addMemory = () => {
         submitMemory({
             song: document.getElementById("song").value,
-            memorytext: document.getElementById("memorytext").value
-        });
+            memorytext: document.getElementById("memorytext").value,
+        }, props.token);
     }
 
     return (<>
@@ -53,4 +37,4 @@ const AddMemory = () => {
     </>)
 }
 
-export default AddMemory;
+export default withAuth(AddMemory);

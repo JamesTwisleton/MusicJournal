@@ -7,8 +7,10 @@ function deserialize(serializedJavascript) {
 export default async function auth(cookie) {
     const firebaseToken = deserialize(cookie.replace('__session=','')).firebaseToken;
     const response = await fetcher(`${process.env.SITE_ADDRESS}/api/me?token=${firebaseToken}`);
+
     if(response.status !== 200) {
         return false;
     }
-    return firebaseToken;
+    const user = await response.json();
+    return [firebaseToken, user.user];
 }
