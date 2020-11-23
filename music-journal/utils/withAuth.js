@@ -1,36 +1,34 @@
 import React from 'react';
 import router from 'next/router';
-import { firebase } from './initFirebase';
-import cookies from 'next-cookies'
+import auth from './auth';
 
 const withAuth = (Component) => {
-    console.log(Component);
 
     return class extends React.Component {
 
-        static async getInitialProps(ctx) {
-            const user = firebase.auth().currentUser;
-            console.log(user);
-            return { user };
-        }
-
         constructor(props) {
             super(props);
-        
             this.state = {
                 status: 'LOADING',
             }
         }
-
-        componentDidMount() {
-            if (this.props.user) {
-                this.setState({
-                    status: 'SIGNED_IN'
-                });
+        async componentDidMount() {
+            if (document.cookie) {
+                const [token, user] = await auth(document.cookie);
+                if (!token) {
+                    router.push('/login');
+                } else {                    
+                    this.props.token = token;
+                    this.props.user = user;
+                    this.setState({
+                        status: 'SIGNED_IN'
+                    });
+                }
             } else {
                 router.push('/login');
             }
         }
+
         renderContent() {
             const { status } = this.state;
             if (status == 'LOADING') {
@@ -48,8 +46,5 @@ const withAuth = (Component) => {
         }
     };
 }
-
-
-
 
 export default withAuth;

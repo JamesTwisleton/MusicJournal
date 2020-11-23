@@ -1,6 +1,8 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const firebaseAdmin = require('firebase-admin');
 const serviceAccount = require('../../service-account.json');
+const serialize = require('serialize-javascript');
+
 import Cors from 'cors';
 import { firebase } from '../../utils/initFirebase';
 
@@ -23,7 +25,6 @@ function runMiddleware(req, res, fn) {
 }
 
 function deserialize(serializedJavascript) {
-  console.log(serializedJavascript);
   return eval('(' + serializedJavascript + ')');
 }
 
@@ -65,11 +66,17 @@ async function handler(req, res) {
         const userName = userResults.body['display_name'];
         const email = userResults.body['email'];
         const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
-        const user = await firebase.auth().signInWithCustomToken(firebaseToken)
-          .catch(function (error) {
-          });
-        res.writeHead(301, {
-          Location: process.env.SITE_ADDRESS
+        const serializedCookie = serialize({
+          firebaseToken,
+          'maxAge': 3600000,
+          'secure': true,
+          'httpOnly': true,
+        });
+        // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        await firebase.auth().signInWithCustomToken(firebaseToken);
+        return res.writeHead(301, {
+          Location: process.env.SITE_ADDRESS,
+          'set-cookie': `__session=${serializedCookie}; Path=/`
         }).end();
       });
     });

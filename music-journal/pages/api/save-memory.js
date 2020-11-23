@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+    console.log('token is');
+    console.log(req.query.token);
     if (!req.body.song || !req.body.memorytext) {
         return ('save memory request missing key data');
     }
@@ -20,9 +22,7 @@ export default async function handler(req, res) {
     const saveSong = firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
     const saveText = firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memorytext);
 
-    await Promise.all([saveSong, saveText]);
+    // await Promise.all([saveSong, saveText]);
 
-    res.writeHead(301, {
-        Location: '/',
-    }).end();
+    return res.status(200).json('cool');
 }
