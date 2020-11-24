@@ -1,7 +1,7 @@
 import { auth } from '../../utils/initFirebase';
 import Cors from 'cors';
 import { database, firebaseAdmin } from '../../utils/initFirebaseAdmin';
-import initMiddleware from '../../lib/init-middleware'
+import initMiddleware from '../../utils/initMiddleware'
 import serialize from 'serialize-javascript';
 import Spotify from '../../utils/initSpotify';
 

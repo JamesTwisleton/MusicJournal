@@ -1,7 +1,7 @@
 import { auth } from 'firebase'
 import Cors from 'cors';
 import { database } from '../../utils/initFirebaseAdmin'
-import initMiddleware from '../../lib/init-middleware'
+import initMiddleware from '../../utils/initMiddleware'
 import { v4 as uuidv4 } from 'uuid';
 
 const cors = initMiddleware(

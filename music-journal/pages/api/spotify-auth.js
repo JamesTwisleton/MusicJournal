@@ -1,6 +1,6 @@
 import Cors from 'cors';
 import crypto from 'crypto';
-import initMiddleware from '../../lib/init-middleware';
+import initMiddleware from '../../utils/initMiddleware';
 import serialize from 'serialize-javascript';
 import Spotify from '../../utils/initSpotify';
 

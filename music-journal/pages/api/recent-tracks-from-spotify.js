@@ -1,7 +1,7 @@
 import { auth } from 'firebase';
 import Cors from 'cors';
 import { database } from '../../utils/initFirebaseAdmin';
-import initMiddleware from '../../lib/init-middleware'
+import initMiddleware from '../../utils/initMiddleware'
 import Spotify from '../../utils/initSpotify';
 
 const cors = initMiddleware(
@@ -12,7 +12,7 @@ const cors = initMiddleware(
 
 async function handler(req, res) {
     await cors(req, res)
-    
+
     if (!req.query.token) {
         return res.writeHead(401).end();
     }

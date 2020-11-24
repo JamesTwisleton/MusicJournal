@@ -1,6 +1,6 @@
 import { auth } from '../../utils/initFirebase';
 import Cors from 'cors';
-import initMiddleware from '../../lib/init-middleware'
+import initMiddleware from '../../utils/initMiddleware'
 
 const cors = initMiddleware(
     Cors({
