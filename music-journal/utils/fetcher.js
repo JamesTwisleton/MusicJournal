@@ -11,6 +11,7 @@ const getMemories = async () => {
 
 const addMemory = async (memory, token) => {
     const response = await axios.post(`/api/save-memory?token=${token}`, memory)
+    console.log('addMemory', response)
     return response.data
 }
 

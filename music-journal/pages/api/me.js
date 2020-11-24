@@ -10,10 +10,11 @@ const cors = initMiddleware(
 
 async function handler(req, res) {
     await cors(req, res)
-
+    
     if (!req.query.token) {
         return res.writeHead(401).end();
     }
+
     try {
         const firebaseUser = await auth.signInWithCustomToken(req.query.token);
         return res.status(200).json(firebaseUser);

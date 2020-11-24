@@ -1,8 +1,7 @@
 import { auth } from 'firebase'
 import Cors from 'cors';
-import firebaseAdmin from 'firebase-admin'
+import { database } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../lib/init-middleware'
-import serviceAccount from  '../../service-account.json'
 import { v4 as uuidv4 } from 'uuid';
 
 const cors = initMiddleware(
@@ -13,16 +12,9 @@ const cors = initMiddleware(
 
 const messageUuid = uuidv4();
 
-export default async function handler(req, res) {
+async function handler(req, res) {
     await cors(req, res)
-    
-    if (!firebaseAdmin.apps.length) {
-        firebaseAdmin.initializeApp({
-            credential: firebaseAdmin.credential.cert(serviceAccount),
-            databaseURL: process.env.FIREBASE_DATABASE_URL,
-        });
-    }
-    
+
     if (!req.query.token) {
         return res.writeHead(401).end();
     }
@@ -30,16 +22,9 @@ export default async function handler(req, res) {
     if (!req.body.song || !req.body.memorytext) {
         return ('save memory request missing key data');
     }
-    
-    try {
-        await auth().signInWithCustomToken(req.query.token);
-    } catch (error) {
-        console.log(error);
-        return res.writeHead(401).end();
-    }
 
     try {
-        const user = await auth().currentUser;
+        const user = auth().currentUser;
         
         if (!user) {
             res.status(403).json({
@@ -47,8 +32,8 @@ export default async function handler(req, res) {
             });
         }
 
-        const song = await firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
-        const messageText = await firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memorytext);
+        const song = await database.ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
+        const messageText = await database.ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memorytext);
         res.send({ messageText, song })
     } catch (error) {
         console.log('save error', error)
@@ -56,3 +41,5 @@ export default async function handler(req, res) {
 
     return res.status(200).json('cool');
 }
+
+export default handler

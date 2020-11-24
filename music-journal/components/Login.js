@@ -11,7 +11,7 @@ const Login = ({ user }) => {
   }
 
   //This should probably move into the nav
-  const handleLogout = () => {
+  const handleSignOut = () => {
     auth.signOut().then(function () {
       alert('Logout successful');
     }).catch(function (error) {

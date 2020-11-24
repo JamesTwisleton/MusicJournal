@@ -1,10 +1,9 @@
 import { auth } from '../../utils/initFirebase';
 import Cors from 'cors';
-import firebaseAdmin from 'firebase-admin';
+import { database, firebaseAdmin } from '../../utils/initFirebaseAdmin';
 import initMiddleware from '../../lib/init-middleware'
-import serviceAccount from '../../service-account.json';
 import serialize from 'serialize-javascript';
-import SpotifyWebApi from 'spotify-web-api-node';
+import Spotify from '../../utils/initSpotify';
 
 const cors = initMiddleware(
   Cors({
@@ -18,19 +17,6 @@ function deserialize(serializedJavascript) {
 
 async function handler(req, res) {
   await cors(req, res)
-  
-  if (!firebaseAdmin.apps.length) {
-    firebaseAdmin.initializeApp({
-      credential: firebaseAdmin.credential.cert(serviceAccount),
-      databaseURL: process.env.FIREBASE_DATABASE_URL,
-    });
-  }
-
-  const Spotify = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    redirectUri: process.env.AUTH_REDIRECT_URL,
-  });
 
   try {
     let cookie = deserialize(req.cookies.__session);
@@ -91,7 +77,7 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
   const uid = `spotify:${spotifyID}`;
 
   // Save the access token to the Firebase Realtime Database.
-  const databaseTask = firebaseAdmin.database().ref(`/spotifyAccessToken/${uid}`).set(accessToken);
+  const databaseTask = database.ref(`/spotifyAccessToken/${uid}`).set(accessToken);
 
   // Create or update the user account.
   const userCreationTask = firebaseAdmin.auth().updateUser(uid, {

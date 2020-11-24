@@ -9,9 +9,8 @@ const AddMemory = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log('handle submit')
+        
         try {
-            console.log('token component', song, memoryText, props.token)
             const response = await addMemory({ song, memoryText }, props.token)
             console.log('add memory response', response)
             setSong('')
