@@ -1,4 +1,6 @@
 import GoogleMapReact from 'google-map-react';
+import React, { useState } from 'react';
+
 const MapItem = ({ text }) => (
     <div style={{
         color: 'white',
@@ -15,29 +17,26 @@ const MapItem = ({ text }) => (
     </div>
 );
 
-class Map extends React.Component {
-    static defaultProps = {
-        center: { lat: 50.82551352099586, lng: -0.13538314692218156 },
-        zoom: 11
-    };
+const Map = () => {
+    const [center, setCenter] = useState({ lat: 50.82551352099586, lng: -0.13538314692218156 });
+    const [zoom, setZoom] = useState(11);
 
-    render() {
-        return (
-            <div style={{ height: '100vh', width: '100%' }}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_MAPS_API_KEY }}
-                    defaultCenter={this.props.center}
-                    defaultZoom={this.props.zoom}
-                >
-                    <MapItem
-                        lat={50.82551352099586}
-                        lng={-0.13538314692218156}
-                        text={'Music Journal'}
-                    />
-                </GoogleMapReact>
-            </div>
-        );
-    }
-}
+    return (
+        <div style={{ height: '100vh', width: '100%' }}>
+            <GoogleMapReact
+                bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_MAPS_API_KEY }}
+                defaultCenter={center}
+                defaultZoom={zoom}
+            >
+                <MapItem
+                    lat={50.82551352099586}
+                    lng={-0.13538314692218156}
+                    text={'Music Journal'}
+                />
+            </GoogleMapReact>
+        </div>
+    );
+
+};
 
 export default Map;
