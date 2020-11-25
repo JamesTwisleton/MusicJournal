@@ -13,17 +13,11 @@ const cors = initMiddleware(
 
 const verifyTokenMiddleware = initMiddleware(verifyToken);
 
-
-const messageUuid = uuidv4();
-
 async function handler(req, res) {
+    const messageUuid = uuidv4();
     await cors(req, res)
     await verifyTokenMiddleware(req, res);
-    // if (!req.query.token) {
-    //     console.log('no token on save memory request');
-    //     return res.writeHead(401).end();
-    // }
-    console.log(req.body.memorytext);
+
     if (!req.body.song || !req.body.memoryText) {
         console.log(('save memory request missing key data'));
         return res.writeHead(401).end();

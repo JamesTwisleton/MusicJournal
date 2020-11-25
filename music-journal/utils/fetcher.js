@@ -4,8 +4,11 @@ const fetcher = async (url) => {
     return await axios.get(url)
 }
 
-const getMemories = async () => {
-    const response = await axios.get('/api/list-memories')
+const getMemories = async (token) => {
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    const response = await axios.get('/api/list-memories', config)
     return response.data
 }
 

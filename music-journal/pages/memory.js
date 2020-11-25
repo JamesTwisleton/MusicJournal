@@ -1,12 +1,10 @@
 import React from 'react'
-import AddMemory from '../components/AddMemory'
-import ListMemories from '../components/ListMemories'
+import Memory from '../components/Memory'
 
 const Dashboard = () => {
     return (
         <>
-            <AddMemory />
-            <ListMemories />
+            <Memory/>
         </>
     )
 }

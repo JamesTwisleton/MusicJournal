@@ -15,6 +15,8 @@ const AddMemory = (props) => {
             console.log('add memory response', response)
             setSong('')
             setMemoryText('')
+            document.getElementById("songTextArea").value = '';
+            document.getElementById("memoryTextArea").value = '';
         } catch (error) {
             console.log('handle submit error', error)
         }
@@ -30,13 +32,13 @@ const AddMemory = (props) => {
                     <Row className="justify-content-center">
                         <Form.Group controlId="formSong">
                             <Form.Label>Write a song name</Form.Label>
-                            <Form.Control as="textarea" onChange={({target}) => setSong(target.value)} rows="1" />
+                            <Form.Control as="textarea" id="songTextArea" onChange={({target}) => setSong(target.value)} rows="1" />
                         </Form.Group>
                     </Row>
                     <Row>
                         <Form.Group controlId="formMemoryText">
                             <Form.Label>Write something about it</Form.Label>
-                            <Form.Control as="textarea" onChange={({target}) => setMemoryText(target.value)} rows="3" />
+                            <Form.Control as="textarea" id="memoryTextArea" onChange={({target}) => setMemoryText(target.value)} rows="3" />
                         </Form.Group>
                     </Row>
                 </Form>
@@ -48,4 +50,4 @@ const AddMemory = (props) => {
     </>)
 }
 
-export default withAuth(AddMemory);
+export default AddMemory;

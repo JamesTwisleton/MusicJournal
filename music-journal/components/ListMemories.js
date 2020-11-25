@@ -3,11 +3,11 @@ import { Row, Col, Table } from 'react-bootstrap/';
 import { getMemories } from '../utils/fetcher';
 import withAuth from '../utils/withAuth';
 
-const ListMemories = () => {
+const ListMemories = (props) => {
   const [memories, setMemories] = useState({}); 
-
+  
   useEffect(() => {
-    getMemories()
+    getMemories(props.token)
       .then(response => setMemories(response))
       .catch(error => console.log(error))
   }, []);
@@ -45,4 +45,4 @@ const ListMemories = () => {
   )
 }
 
-export default withAuth(ListMemories);
+export default ListMemories;
