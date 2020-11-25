@@ -1,44 +1,20 @@
-const crypto = require('crypto');
-const SpotifyWebApi = require('spotify-web-api-node');
-const firebaseAdmin = require('firebase-admin');
-const serviceAccount = require('../../service-account.json');
-const serialize = require('serialize-javascript');
-
 import Cors from 'cors';
-const cors = Cors({
-  methods: ['GET', 'HEAD'],
-});
-const OAUTH_SCOPES = ['user-read-email', 'user-read-recently-played'];
-if (!firebaseAdmin.apps.length) {
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
-  });
-}
-const Spotify = new SpotifyWebApi({
-  clientId: process.env.SPOTIFY_CLIENT_ID,
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: process.env.AUTH_REDIRECT_URL,
-});
+import crypto from 'crypto';
+import initMiddleware from '../../utils/initMiddleware';
+import serialize from 'serialize-javascript';
+import Spotify from '../../utils/initSpotify';
 
-
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      return resolve(result)
-    })
+const cors = initMiddleware(
+  Cors({
+      methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
   })
-}
+)
 
+const OAUTH_SCOPES = ['user-read-email', 'user-read-recently-played'];
 
 async function handler(req, res) {
-  await runMiddleware(req, res, cors);
+  await cors(req, res)
+  
   const state = req.cookies.state || crypto.randomBytes(20).toString('hex');
   const serializedCookie = serialize({
     verificationState: state.toString(),
@@ -47,14 +23,13 @@ async function handler(req, res) {
     'httpOnly': true,
   });
   const authorizeURL = await Spotify.createAuthorizeURL(OAUTH_SCOPES, state.toString());
+  
   res.writeHead(301, {
     Location: authorizeURL,
     'set-cookie': `__session=${serializedCookie}`
   });
 
   return res.end();
-
 };
-
 
 export default handler;

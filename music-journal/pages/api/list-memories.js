@@ -1,30 +1,43 @@
-export default async function handler(req, res) {
-    const firebaseAdmin = require('firebase-admin');
-    const firebase = require('firebase');
-    const serviceAccount = require('../../service-account.json');
-    
-    if (!firebaseAdmin.apps.length) {
-        firebaseAdmin.initializeApp({
-            credential: firebaseAdmin.credential.cert(serviceAccount),
-            databaseURL: process.env.FIREBASE_DATABASE_URL,
-        });
-    }
+import { auth } from 'firebase'
+import Cors from 'cors';
+import { database } from '../../utils/initFirebaseAdmin'
+import initMiddleware from '../../utils/initMiddleware'
+import verifyToken from '../../utils/verifyToken';
 
-    const user = await firebase.auth().currentUser;
-    if (!user) {
-        res.status(403).json({
-            authenticated: false
-        });
-    }
+const cors = initMiddleware(
+    Cors({
+        methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+    })
+)
 
-    const ref = await firebaseAdmin.database().ref(`/memory/${user.uid}`);
-    await ref.orderByValue().once("value", snapshot => {
-        let memories = [];
-        snapshot.forEach(data => {
-            memories.push(data.val());
-        });
-        res.send(
-            memories
-        );
-    });
+
+const verifyTokenMiddleware = initMiddleware(verifyToken);
+
+async function handler(req, res) {
+    await cors(req, res)
+    await verifyTokenMiddleware(req, res)
+
+    try {
+        const user = auth().currentUser;
+        if (!user) {
+            console.log('list-memories user')
+            res.status(403).json({
+                authenticated: false
+            });
+        }
+
+        let memories = []
+
+        const memoriesRef = await database.ref(`/memory/${user.uid}`);
+
+        await memoriesRef.orderByValue().once("value", snapshot => {
+            snapshot.forEach(data => { memories.push(data.val()) })
+        })
+
+        res.send(memories)
+    } catch (error) {
+        console.log('list', error)
+    }
 }
+
+export default handler

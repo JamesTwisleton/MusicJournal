@@ -11,6 +11,7 @@
     "deploy:local": "yarn build && cross-env NODE_ENV=production firebase emulators:start --only functions,hosting"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "bootstrap": "^4.5.2",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",

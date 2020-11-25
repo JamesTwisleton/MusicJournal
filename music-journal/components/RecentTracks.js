@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
+import { fetcher } from '../utils/fetcher';
 import withAuth from '../utils/withAuth';
-
-//TODO: Move to services
-const fetcher = (url) =>
-    fetch(url, {
-        method: 'GET',
-    }).then((res) => res.json());
 
 const RecentTracks = (props) => {
     const [carouselIndex, setCarouselIndex] = useState(0);
@@ -24,9 +19,11 @@ const RecentTracks = (props) => {
             setScaleRatio(scaleRatio + (.00009 * scaleDirection));
         }, 10);
 
-        fetcher(`/api/recent-tracks-from-spotify?token=${props.token}`).then((json) => {
-            setRecentTracks(json);
-        });
+        fetcher(`/api/recent-tracks-from-spotify?token=${props.token}`)
+            .then((response) => {
+                setRecentTracks(response.data);
+            })
+            .catch(error => console.log(error))
     }, [])
 
     const moveCarousel = (index) => {

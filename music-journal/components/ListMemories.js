@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Table } from 'react-bootstrap/';
+import { getMemories } from '../utils/fetcher';
 import withAuth from '../utils/withAuth';
-//TODO: Move to services
-const fetcher = (url) =>
-  fetch(url, {
-    method: 'GET',
-}).then((res) => res.json());
 
-const ListMemories = ({ firebaseToken }) => {
+const ListMemories = (props) => {
   const [memories, setMemories] = useState({}); 
-
+  
   useEffect(() => {
-    fetcher('/api/list-memories').then((json) => {
-      setMemories(json);
-    });
+    getMemories(props.token)
+      .then(response => setMemories(response))
+      .catch(error => console.log(error))
   }, []);
 
   if (!memories || memories.length < 1) {
@@ -27,7 +23,6 @@ const ListMemories = ({ firebaseToken }) => {
           <h4>Your Top Memories</h4>
         </Row>
         <Row className="justify-content-center">
-
           <Table striped bordered hover size="sm" id="memoriestable">
             <thead>
               <tr>
@@ -36,10 +31,10 @@ const ListMemories = ({ firebaseToken }) => {
               </tr>
             </thead>
             <tbody id="memoriestablebody">
-              {memories.length > 0 && memories.map(memory => 
-                <tr key={memory.song}>
-                  <td>{memory.song}</td>
-                  <td>{memory.text}</td>
+              {memories.length > 0 && memories.map(({song, text}) => 
+                <tr key={song}>
+                  <td>{song}</td>
+                  <td>{text}</td>
                 </tr>
               )}
             </tbody>
@@ -50,42 +45,4 @@ const ListMemories = ({ firebaseToken }) => {
   )
 }
 
-ListMemories.getInitialProps = async (ctx) => {
-  const { firebaseToken } = cookies(ctx);
-  if (!firebaseToken) {
-    return {}
-  }
-  return { firebaseToken };
-}
-
-export default withAuth(ListMemories);
-
-// <Table striped bordered hover size="sm">
-//             <thead>
-//               <tr>
-//                 <th>#</th>
-//                 <th>First Name</th>
-//                 <th>Last Name</th>
-//                 <th>Username</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               <tr>
-//                 <td>1</td>
-//                 <td>Mark</td>
-//                 <td>Otto</td>
-//                 <td>@mdo</td>
-//               </tr>
-//               <tr>
-//                 <td>2</td>
-//                 <td>Jacob</td>
-//                 <td>Thornton</td>
-//                 <td>@fat</td>
-//               </tr>
-//               <tr>
-//                 <td>3</td>
-//                 <td colSpan="2">Larry the Bird</td>
-//                 <td>@twitter</td>
-//               </tr>
-//             </tbody>
-//           </Table>
+export default ListMemories;

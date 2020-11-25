@@ -1,28 +1,51 @@
-export default async function handler(req, res) {
-    console.log('token is');
-    console.log(req.query.token);
-    if (!req.body.song || !req.body.memorytext) {
-        return ('save memory request missing key data');
-    }
-    const firebaseAdmin = require('firebase-admin');
-    const firebase = require('firebase');
-    const serviceAccount = require('../../service-account.json');
+import { auth } from 'firebase'
+import Cors from 'cors';
+import { database } from '../../utils/initFirebaseAdmin'
+import initMiddleware from '../../utils/initMiddleware'
+import verifyToken from '../../utils/verifyToken';
+import { v4 as uuidv4 } from 'uuid';
 
-    const { v4: uuid } = require('uuid');
-    
-    if (!firebaseAdmin.apps.length) {
-        firebaseAdmin.initializeApp({
-            credential: firebaseAdmin.credential.cert(serviceAccount),
-            databaseURL: process.env.FIREBASE_DATABASE_URL,
+const cors = initMiddleware(
+    Cors({
+        methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+    })
+)
+
+const verifyTokenMiddleware = initMiddleware(verifyToken);
+
+async function handler(req, res) {
+    const messageUuid = uuidv4();
+    await cors(req, res)
+    await verifyTokenMiddleware(req, res);
+
+    if (!req.body.song || !req.body.memoryText) {
+        console.log(('save memory request missing key data'));
+        return res.writeHead(401).end();
+    }
+
+    try {
+        const user = auth().currentUser;
+
+        if (!user) {
+            return res.status(403).json({
+                authenticated: false
+            });
+        }
+
+        const song = await database.ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
+        const messageText = await database.ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memoryText);
+        return res.send({ messageText, song })
+    } catch (error) {
+        console.log('save error', error)
+        return res.status(403).json({
+            authenticated: false
         });
     }
+}
 
-    const user = firebase.auth().currentUser;
-    const messageUuid = uuid();
-    const saveSong = firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
-    const saveText = firebaseAdmin.database().ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memorytext);
-
-    // await Promise.all([saveSong, saveText]);
-
-    return res.status(200).json('cool');
+export default handler
+export const config = {
+    api: {
+        bodyParser: false,
+    },
 }
