@@ -15,12 +15,19 @@ const getMemories = async (token) => {
 const addMemory = async (memory, token) => {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
-    };
-    console.log(memory);
-    console.log(token);
+    }
+    
     const response = await axios.post('/api/save-memory', memory, config);
-    console.log('addMemory', response)
     return response.data
 }
 
-export { fetcher, getMemories, addMemory }
+const getMe = async (token) => {
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    }
+    
+    const response = await axios.get('/api/me', config)
+    return response.data
+}
+
+export { fetcher, getMemories, addMemory, getMe }

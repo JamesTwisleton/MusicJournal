@@ -1,6 +1,7 @@
 import { auth } from '../../utils/initFirebase';
 import Cors from 'cors';
 import initMiddleware from '../../utils/initMiddleware'
+import verifyToken from '../../utils/verifyToken';
 
 const cors = initMiddleware(
     Cors({
@@ -8,15 +9,14 @@ const cors = initMiddleware(
     })
 )
 
+const verifyTokenMiddleware = initMiddleware(verifyToken);
+
 async function handler(req, res) {
     await cors(req, res)
-    
-    if (!req.query.token) {
-        return res.writeHead(401).end();
-    }
+    await verifyTokenMiddleware(req, res)
 
     try {
-        const firebaseUser = await auth.signInWithCustomToken(req.query.token);
+        const firebaseUser = await auth.signInWithCustomToken(req.token);
         return res.status(200).json(firebaseUser);
     } catch (error) {
         console.log(error);

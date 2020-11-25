@@ -14,27 +14,31 @@ const cors = initMiddleware(
 const verifyTokenMiddleware = initMiddleware(verifyToken);
 
 async function handler(req, res) {
-    const messageUuid = uuidv4();
     await cors(req, res)
     await verifyTokenMiddleware(req, res);
 
-    if (!req.body.song || !req.body.memoryText) {
+    const messageUuid = uuidv4();
+    const user = auth().currentUser;
+    const { song, text } = req.body
+
+    if (!song || !text) {
         console.log(('save memory request missing key data'));
         return res.writeHead(401).end();
     }
 
+    if (!user) {
+        return res.status(403).json({
+            authenticated: false
+        });
+    }
+
     try {
-        const user = auth().currentUser;
-
-        if (!user) {
-            return res.status(403).json({
-                authenticated: false
-            });
-        }
-
-        const song = await database.ref(`/memory/${user.uid}/${messageUuid}/song`).set(req.body.song);
-        const messageText = await database.ref(`/memory/${user.uid}/${messageUuid}/text`).set(req.body.memoryText);
-        return res.send({ messageText, song })
+        await database.ref(`/memory/${user.uid}/${messageUuid}/song`).set(song);
+        await database.ref(`/memory/${user.uid}/${messageUuid}/text`).set(text);
+        
+        return res.send({
+            [messageUuid]: { song, text }
+        })
     } catch (error) {
         console.log('save error', error)
         return res.status(403).json({

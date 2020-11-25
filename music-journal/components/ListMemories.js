@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Row, Col, Table } from 'react-bootstrap/';
-import { getMemories } from '../utils/fetcher';
-import withAuth from '../utils/withAuth';
 
-const ListMemories = (props) => {
-  const [memories, setMemories] = useState({}); 
-  
-  useEffect(() => {
-    getMemories(props.token)
-      .then(response => setMemories(response))
-      .catch(error => console.log(error))
-  }, []);
 
+const ListMemories = ({ memories }) => {
   if (!memories || memories.length < 1) {
     return <p id="nomemories">You havent added any memories yet.....</p>
   }
@@ -31,7 +22,7 @@ const ListMemories = (props) => {
               </tr>
             </thead>
             <tbody id="memoriestablebody">
-              {memories.length > 0 && memories.map(({song, text}) => 
+              {memories && Object.values(memories).map(({song, text}) => 
                 <tr key={song}>
                   <td>{song}</td>
                   <td>{text}</td>
