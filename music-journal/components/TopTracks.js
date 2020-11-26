@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Container, Row, Card, CardColumns } from 'react-bootstrap/';
 import { getTopTracks } from '../utils/fetcher'
 
 const TopTracks = (props) => {
@@ -16,15 +17,25 @@ const TopTracks = (props) => {
         initTopTracks()
     }, [])
 
-    if (!topTracks) {
-        return <div>No top tracks yet...</div>
-    }
-
     return (
-        <div>
-            <h2>Top Tracks</h2>
-            {topTracks && topTracks.map(({name}) => <div key={name}>{name}</div>)}
-        </div>
+        <Container>
+            <Row className="justify-content-center" xs={12}>
+                <h2>Top Tracks</h2>
+            </Row>
+            <Row className="justify-content-center">
+                {!topTracks && 
+                    <Row>No top tracks yet...</Row>
+                }
+                <CardColumns>
+                    {topTracks && topTracks.map(({album, name}) => 
+                        <Card key={name}>
+                            <Card.Img variant="top" src={album.images[0].url}/>
+                            <Card.Title>{name}</Card.Title>
+                        </Card>
+                    )}
+                </CardColumns>
+            </Row>
+        </Container>
     )
 }
 
