@@ -1,27 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap/';
-import { addMemory } from '../utils/fetcher'
-import withAuth from '../utils/withAuth';
 
-const AddMemory = (props) => {
-    const [song, setSong] = useState('')
-    const [memoryText, setMemoryText] = useState('')
-
-    const handleSubmit = async (event) => {
-        event.preventDefault()
-        
-        try {
-            const response = await addMemory({ song, memoryText }, props.token)
-            console.log('add memory response', response)
-            setSong('')
-            setMemoryText('')
-            document.getElementById("songTextArea").value = '';
-            document.getElementById("memoryTextArea").value = '';
-        } catch (error) {
-            console.log('handle submit error', error)
-        }
-    }
-
+const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
     return (<>
         <Col xs={12} sm={6}>
             <Row className="justify-content-center" xs={12} >
@@ -32,13 +12,23 @@ const AddMemory = (props) => {
                     <Row className="justify-content-center">
                         <Form.Group controlId="formSong">
                             <Form.Label>Write a song name</Form.Label>
-                            <Form.Control as="textarea" id="songTextArea" onChange={({target}) => setSong(target.value)} rows="1" />
+                            <Form.Control 
+                                as="textarea" 
+                                onChange={({target}) => setSong(target.value)} 
+                                rows="1" 
+                                value={song}
+                            />
                         </Form.Group>
                     </Row>
                     <Row>
-                        <Form.Group controlId="formMemoryText">
+                        <Form.Group controlId="formText">
                             <Form.Label>Write something about it</Form.Label>
-                            <Form.Control as="textarea" id="memoryTextArea" onChange={({target}) => setMemoryText(target.value)} rows="3" />
+                            <Form.Control 
+                                as="textarea" 
+                                onChange={({target}) => setText(target.value)} 
+                                rows="3"
+                                value={text}
+                            />
                         </Form.Group>
                     </Row>
                 </Form>

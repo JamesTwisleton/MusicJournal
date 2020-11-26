@@ -26,13 +26,9 @@ async function handler(req, res) {
             });
         }
 
-        let memories = []
-
         const memoriesRef = await database.ref(`/memory/${user.uid}`);
-
-        await memoriesRef.orderByValue().once("value", snapshot => {
-            snapshot.forEach(data => { memories.push(data.val()) })
-        })
+        const memoriesSnapshot = await memoriesRef.orderByValue().once("value")
+        const memories = Object.assign({}, memoriesSnapshot.val())
 
         res.send(memories)
     } catch (error) {

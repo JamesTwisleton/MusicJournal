@@ -11,15 +11,11 @@ const cors = initMiddleware(
   })
 )
 
-function deserialize(serializedJavascript) {
-  return eval('(' + serializedJavascript + ')');
-}
-
 async function handler(req, res) {
   await cors(req, res)
 
   try {
-    let cookie = deserialize(req.cookies.__session);
+    const cookie = JSON.parse(req.cookies.__session);
     if (!cookie.verificationState) {
       console.error('verificationState cookie not set');
       throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
@@ -81,18 +77,18 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
 
   // Create or update the user account.
   const userCreationTask = firebaseAdmin.auth().updateUser(uid, {
-    displayName: displayName,
-    photoURL: photoURL,
-    email: email,
+    displayName,
+    photoURL,
+    email,
     emailVerified: true,
   }).catch((error) => {
     // If user does not exists we create it.
     if (error.code === 'auth/user-not-found') {
       return firebaseAdmin.auth().createUser({
-        uid: uid,
-        displayName: displayName,
-        photoURL: photoURL,
-        email: email,
+        uid,
+        displayName,
+        photoURL,
+        email,
         emailVerified: true,
       });
     }

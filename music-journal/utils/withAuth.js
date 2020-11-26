@@ -15,7 +15,7 @@ const withAuth = (Component) => {
         async componentDidMount() {
             if (document.cookie) {
                 try {
-                    const [token, user] = await auth(document.cookie);
+                    const [token, user] = await auth();
                     if (!token || !user) {
                         router.push('/login');
                     } else {                    
@@ -26,7 +26,7 @@ const withAuth = (Component) => {
                         });
                     }
                 } catch (error) {
-                    console.log(error)
+                    console.log('withauth', error)
                 }
             } else {
                 router.push('/login');

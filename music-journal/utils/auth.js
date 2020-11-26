@@ -1,15 +1,13 @@
-import { fetcher } from './fetcher';
+import Cookies from 'js-cookie'
+import { getMe } from './fetcher'
 
-function deserialize(serializedJavascript) {
-    return eval('(' + serializedJavascript + ')');
-}
-export default async function auth(cookie) {
-    const firebaseToken = deserialize(cookie.replace('__session=','')).firebaseToken;
-    const { data: { user }, status } = await fetcher(`/api/me?token=${firebaseToken}`);
-
-    if(status !== 200) {
-        return false;
+export default async function auth() {
+    try {
+        const { firebaseToken } = JSON.parse(Cookies.get('__session'))
+        const { user } = await getMe(firebaseToken)
+        
+        return [firebaseToken, user]
+    } catch (error) {
+        console.log('auth', error)
     }
-
-    return [firebaseToken, user];
 }
