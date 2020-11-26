@@ -1,7 +1,8 @@
-import { auth } from '../../utils/initFirebase'
 import Cors from 'cors';
+import { auth } from '../../utils/initFirebase'
 import { database } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../utils/initMiddleware'
+import Spotify from '../../utils/initSpotify';
 import verifyToken from '../../utils/verifyToken';
 
 const cors = initMiddleware(
@@ -10,30 +11,32 @@ const cors = initMiddleware(
     })
 )
 
-
 const verifyTokenMiddleware = initMiddleware(verifyToken);
 
-async function handler(req, res) {
+export default async function handler(req, res) {
     await cors(req, res)
     await verifyTokenMiddleware(req, res)
 
-    try {
+    try {       
         const user = auth.currentUser;
+
         if (!user) {
-            console.log('list-memories user')
             res.status(403).json({
                 authenticated: false
             });
         }
+        
+        const ref = await database.ref(`/spotifyAccessToken/${user.uid}`);
+        const snapshot = await ref.orderByValue().once("value")
+        const spotifyToken = await snapshot.val()
+        
+        Spotify.setAccessToken(spotifyToken);
 
-        const memoriesRef = await database.ref(`/memory/${user.uid}`);
-        const memoriesSnapshot = await memoriesRef.orderByValue().once("value")
-        const memories = Object.assign({}, memoriesSnapshot.val())
-
-        res.send(memories)
+        const data = await Spotify.getMyTopTracks()
+        const topTracks = data.body.items;
+        
+        res.send(topTracks);
     } catch (error) {
-        console.log('list', error)
+        console.log(error)
     }
 }
-
-export default handler

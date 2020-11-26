@@ -1,4 +1,4 @@
-import { auth } from 'firebase'
+import { auth } from '../../utils/initFirebase'
 import Cors from 'cors';
 import { database } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../utils/initMiddleware'
@@ -18,7 +18,7 @@ async function handler(req, res) {
     await verifyTokenMiddleware(req, res);
 
     const messageUuid = uuidv4();
-    const user = auth().currentUser;
+    const user = auth.currentUser;
     const { song, text } = req.body
 
     if (!song || !text) {

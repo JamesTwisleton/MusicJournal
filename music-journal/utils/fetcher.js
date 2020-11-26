@@ -21,6 +21,18 @@ const addMemory = async (memory, token) => {
     return response.data
 }
 
+const getTopTracks = async (token) => {
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    }
+    
+    const response = await axios.get('/api/top-tracks-from-spotify', config);
+    return response.data
+}
 
-
-export { fetcher, getMemories, addMemory }
+export { 
+    fetcher, 
+    getMemories, 
+    addMemory,
+    getTopTracks 
+}
