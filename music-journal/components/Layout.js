@@ -1,26 +1,23 @@
 import NavigationBar from './NavigationBar';
+import { Container } from 'react-bootstrap/';
 
 const Layout = ({ children }) => {
   return (
     <>
       {/*<NavigationBar />*/}
-      <div>
+      <Container fluid id="main">
+
         {children}
         <style global jsx>{`
-            html,
-            body,
-            body > div:first-child,
-            div#__next,
-            div#__next > div,
-            div#__next > div > div {
-              height: 100%;    
+            #main {
+              height: 100vh;    
               background: linear-gradient(to bottom, #FFFFFF, #000000);
               margin: 0;
               padding:0;
             }
           `}
         </style>
-      </div>
+      </Container>
     </>
   );
 }
