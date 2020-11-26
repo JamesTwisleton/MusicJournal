@@ -21,13 +21,6 @@ const addMemory = async (memory, token) => {
     return response.data
 }
 
-const getMe = async (token) => {
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
-    }
-    
-    const response = await axios.get('/api/me', config)
-    return response.data
-}
 
-export { fetcher, getMemories, addMemory, getMe }
+
+export { fetcher, getMemories, addMemory }

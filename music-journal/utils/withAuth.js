@@ -1,6 +1,6 @@
 import React from 'react';
 import router from 'next/router';
-import auth from './auth';
+import { getMe } from './auth';
 
 const withAuth = (Component) => {
 
@@ -15,7 +15,7 @@ const withAuth = (Component) => {
         async componentDidMount() {
             if (document.cookie) {
                 try {
-                    const [token, user] = await auth();
+                    const [token, user] = await getMe();
                     if (!token || !user) {
                         router.push('/login');
                     } else {                    
