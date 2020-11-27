@@ -50,7 +50,7 @@ const Login = () => {
             <Row className="justify-content-center">
               <Button variant="dark" onClick={() => handleSignIn()}>
                 <Image src="spotify-logo.png" fluid />
-                Login with Spotify to continue
+                Login with Spotify to continue!
               </Button>
             </Row>
           }
