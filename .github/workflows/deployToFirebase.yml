@@ -42,7 +42,7 @@ jobs:
           name: .next
           path: .next
       - name: Install Dependencies
-        run: 'yarn install'
+        run: 'yarn install firebase-functions'
         shell: bash
       - name:  Deploy to Firebase
         uses: w9jds/firebase-action@master
