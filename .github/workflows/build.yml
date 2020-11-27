@@ -27,13 +27,12 @@ jobs:
           SPOTIFY_CLIENT_SECRET : ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           SITE_ADDRESS : ${{ secrets.SITE_ADDRESS }}
           NEXT_PUBLIC_MAPS_API_KEY : ${{ secrets.NEXT_PUBLIC_MAPS_API_KEY }}
-      - name: Install
-        uses: actions/checkout@v2
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install # will run `yarn install` command
-      -name: Build
-        uses: actions/checkout@v2
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build # will run `yarn build` command
+        - uses: actions/checkout@v2
+        - name: install
+          uses: borales/actions-yarn@v2.0.0
+          with:
+            cmd: install
+        - name: build
+          uses: borales/actions-yarn@v2.0.0
+          with:
+            cmd: build
