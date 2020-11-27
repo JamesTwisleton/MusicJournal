@@ -10,44 +10,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: populate service account
-        run: 'cd music-journal && echo "$SERVICE_ACCOUNT" > service-account.json'
+        run: 'echo "$SERVICE_ACCOUNT" > service-account.json'
         shell: bash
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
       - name: Install Dependencies
-        run: 'cd music-journal && yarn install'
+        run: 'yarn install'
         shell: bash
       - name: Build
-        run: 'cd music-journal && yarn build'
+        run: 'yarn build'
         shell: bash
         env:
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
       - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@main
         with:
-          name: dist
-          path: dist
+          name: .next
+          path: .next
   deploy:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Download Artifact
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@main
         with:
-          name: dist
-          path: dist
-      - name: Deploy to Firebase
+          name: .next
+          path: .next
+      - name: Install Dependencies
+        run: 'yarn install firebase-functions'
+        shell: bash
+      - name:  Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting
+          args: deploy
         env:
-          PROJECT_PATH : ./music-journal
-          GCP_SA_KEY : ${{ secrets.GCP_SA_KEY }}
+          FIREBASE_TOKEN : ${{ secrets.FIREBASE_CI_TOKEN }}
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_AUTH_DOMAIN :  ${{ secrets.FIREBASE_AUTH_DOMAIN }}
           FIREBASE_DATABASE_URL : ${{ secrets.FIREBASE_DATABASE_URL }}
