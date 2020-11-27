@@ -41,9 +41,10 @@ jobs:
         with:
           name: .next
           path: .next
-      - name: Deploy to Firebase
-        run: 'yarn add global firebase-functions && firebase deploy --token "$FIREBASE_TOKEN"'
-        shell: bash
+      - name:  Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
         env:
           FIREBASE_TOKEN : ${{ secrets.FIREBASE_CI_TOKEN }}
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
