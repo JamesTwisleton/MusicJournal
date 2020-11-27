@@ -12,7 +12,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: populate service account
-        run: 'echo "$SERVICE_ACCOUNT" > service-account.json'
+        run: 'cd music-journal && echo "$SERVICE_ACCOUNT" > service-account.json'
         shell: bash
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
