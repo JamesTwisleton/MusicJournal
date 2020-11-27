@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap/';
 
-const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
+const AddMemory = ({ handleSubmit, handleAutocomplete, text, setText, song, setSong }) => {
     return (<>
         <Col xs={12} sm={6}>
             <Row className="justify-content-center" xs={12} >
@@ -12,10 +12,13 @@ const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
                     <Row className="justify-content-center">
                         <Form.Group controlId="formSong">
                             <Form.Label>Write a song name</Form.Label>
-                            <Form.Control 
-                                as="textarea" 
-                                onChange={({target}) => setSong(target.value)} 
-                                rows="1" 
+                            <Form.Control
+                                as="textarea"
+                                onChange={({ target }) => {
+                                    setSong(target.value)
+                                    handleAutocomplete()
+                                }}
+                                rows="1"
                                 value={song}
                             />
                         </Form.Group>
@@ -23,9 +26,9 @@ const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
                     <Row>
                         <Form.Group controlId="formText">
                             <Form.Label>Write something about it</Form.Label>
-                            <Form.Control 
-                                as="textarea" 
-                                onChange={({target}) => setText(target.value)} 
+                            <Form.Control
+                                as="textarea"
+                                onChange={({ target }) => setText(target.value)}
                                 rows="3"
                                 value={text}
                             />

@@ -12,6 +12,14 @@ const getMemories = async (token) => {
     return response.data
 }
 
+const searchSpotifyTracks = async (search, limit, token) => {
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    const response = await axios.get(`/api/search-spotify-tracks?search=${search}&limit=${limit}`, config)
+    return response.data
+}
+
 const addMemory = async (memory, token) => {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
@@ -34,5 +42,6 @@ export {
     fetcher, 
     getMemories, 
     addMemory,
-    getTopTracks 
+    getTopTracks,
+    searchSpotifyTracks
 }
