@@ -1,24 +1,22 @@
 name: CI
-on: push
-
+on: [push]
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@main
       - name: Populate service account
         run: 'echo "$SERVICE_ACCOUNT" > service-account.json'
         shell: bash
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-      - name: Install Dependencies
-        run: 'yarn install'
-        shell: bash
-      - name: Build
-        run: 'yarn build'
-        shell: bash
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # will run `yarn build` command
         env:
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_AUTH_DOMAIN :  ${{ secrets.FIREBASE_AUTH_DOMAIN }}
