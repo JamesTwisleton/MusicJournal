@@ -17,9 +17,11 @@ jobs:
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
       - name: Install Dependencies
-        run: yarn install
+        run: 'cd music-journal && yarn install'
+        shell: bash
       - name: Build
-        run: yarn deploy
+        run: 'cd music-journal && yarn deploy'
+        shell: bash
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
