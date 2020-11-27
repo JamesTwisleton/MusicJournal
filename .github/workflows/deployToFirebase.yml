@@ -59,4 +59,14 @@ jobs:
         with:
           args: deploy --only functions
         env:
-          FIREBASE_TOKEN : ${{ secrets.FIREBASE_CI_TOKEN }}
+          FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_AUTH_DOMAIN :  ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_DATABASE_URL : ${{ secrets.FIREBASE_DATABASE_URL }}
+          FIREBASE_PROJECT_ID : ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET : ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID : ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          AUTH_REDIRECT_URL : ${{ secrets.AUTH_REDIRECT_URL }}
+          SPOTIFY_CLIENT_ID : ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET : ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          SITE_ADDRESS : ${{ secrets.SITE_ADDRESS }}
+          NEXT_PUBLIC_MAPS_API_KEY : ${{ secrets.NEXT_PUBLIC_MAPS_API_KEY }}
