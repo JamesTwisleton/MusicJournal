@@ -17,9 +17,9 @@ jobs:
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
       - name: Install Dependencies
-        run: npm install
+        run: yarn install
       - name: Build
-        run: npm run build-prod
+        run: yarn deploy
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
