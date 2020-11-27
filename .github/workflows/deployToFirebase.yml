@@ -41,6 +41,9 @@ jobs:
         with:
           name: .next
           path: .next
+      - name: Install Dependencies
+        run: 'yarn install'
+        shell: bash
       - name:  Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
