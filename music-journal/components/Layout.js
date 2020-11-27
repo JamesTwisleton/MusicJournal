@@ -10,10 +10,11 @@ const Layout = ({ children }) => {
         {children}
         <style global jsx>{`
             #main {
-              height: 100vh;    
-              background: linear-gradient(to bottom, #FFFFFF, #000000);
+              background: linear-gradient(to bottom, #FFFFFF, #000000) no-repeat center center fixed;
+              background-size: cover;
               margin: 0;
               padding:0;
+              min-height: 100vh;
             }
           `}
         </style>

@@ -10,7 +10,7 @@ const cors = initMiddleware(
   })
 )
 
-const OAUTH_SCOPES = ['user-read-email', 'user-read-recently-played'];
+const OAUTH_SCOPES = ['user-read-email', 'user-read-recently-played', 'user-top-read'];
 
 async function handler(req, res) {
   await cors(req, res)
