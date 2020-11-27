@@ -12,15 +12,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: populate service account
-        run: 'cd music-journal && echo "$SERVICE_ACCOUNT" > service-account.json'
+        run: 'echo "$SERVICE_ACCOUNT" > service-account.json'
         shell: bash
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
       - name: Install Dependencies
-        run: 'cd music-journal && yarn install'
+        run: 'yarn install'
         shell: bash
       - name: Build
-        run: 'cd music-journal && yarn build'
+        run: 'yarn build'
         shell: bash
         env:
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
@@ -46,7 +46,6 @@ jobs:
         with:
           args: deploy --only hosting
         env:
-          PROJECT_PATH : ./music-journal
           GCP_SA_KEY : ${{ secrets.GCP_SA_KEY }}
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_AUTH_DOMAIN :  ${{ secrets.FIREBASE_AUTH_DOMAIN }}
