@@ -20,7 +20,7 @@ jobs:
         run: 'yarn install'
         shell: bash
       - name: Build
-        run: 'yarn build && cross-env NODE_ENV=production'
+        run: 'yarn global add cross-env && yarn build && cross-env NODE_ENV=production'
         shell: bash
         env:
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
