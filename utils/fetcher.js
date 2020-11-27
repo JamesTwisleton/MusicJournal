@@ -24,7 +24,7 @@ const addMemory = async (memory, token) => {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     }
-    
+
     const response = await axios.post('/api/save-memory', memory, config);
     return response.data
 }
@@ -38,9 +38,9 @@ const getTopTracks = async (token) => {
     return response.data
 }
 
-export { 
-    fetcher, 
-    getMemories, 
+export {
+    fetcher,
+    getMemories,
     addMemory,
     getTopTracks,
     searchSpotifyTracks
