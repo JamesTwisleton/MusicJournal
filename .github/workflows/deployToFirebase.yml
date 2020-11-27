@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: populate service account
         run: 'echo "$SERVICE_ACCOUNT" > service-account.json'
         shell: bash
@@ -25,7 +25,7 @@ jobs:
         env:
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
       - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@main
         with:
           name: dist
           path: dist
@@ -35,16 +35,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Download Artifact
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@main
         with:
           name: dist
           path: dist
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@main
         with:
-          args: deploy --only hosting
+          args: deploy
         env:
           GCP_SA_KEY : ${{ secrets.GCP_SA_KEY }}
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
