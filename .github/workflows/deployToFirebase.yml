@@ -47,7 +47,7 @@ jobs:
           args: deploy
         env:
           GCP_SA_KEY : ${{ secrets.GCP_SA_KEY }}
-          FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_API_KEY : ${{ secrets.FIREBASE_CI_TOKEN }}
           FIREBASE_AUTH_DOMAIN :  ${{ secrets.FIREBASE_AUTH_DOMAIN }}
           FIREBASE_DATABASE_URL : ${{ secrets.FIREBASE_DATABASE_URL }}
           FIREBASE_PROJECT_ID : ${{ secrets.FIREBASE_PROJECT_ID }}
