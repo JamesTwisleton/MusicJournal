@@ -4,7 +4,7 @@ import AddMemory from '../components/AddMemory'
 import ListMemories from '../components/ListMemories'
 import Suggestions from '../components/Suggestions'
 import { addMemory, getMemories, searchSpotifyTracks } from '../utils/fetcher';
-import {  Row } from 'react-bootstrap/';
+import { Row } from 'react-bootstrap/';
 const Memory = (props) => {
     const [memories, setMemories] = useState()
     const [text, setText] = useState('')
@@ -33,11 +33,12 @@ const Memory = (props) => {
         }
     }
 
-    const handleAutocomplete = async () => {
-        if (song.length > 2) {
-            setSearchResults(await searchSpotifyTracks(song, 5, props.token))
+    useEffect(async () => {
+        if (song > 2) {
+            const response = await searchSpotifyTracks(song, 5, props.token)
+            setSearchResults(response)
         }
-    }
+    }, [song])
 
     return (<>
         <Row>
@@ -48,7 +49,7 @@ const Memory = (props) => {
                 setText={setText}
                 song={song}
                 setSong={setSong}
-                handleAutocomplete={handleAutocomplete} />
+            />
             <Suggestions searchResults={searchResults} />
         </Row>
         <ListMemories memories={memories} />

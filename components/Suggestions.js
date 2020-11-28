@@ -2,12 +2,12 @@ import React from 'react';
 import { Row, Col, Table } from 'react-bootstrap/';
 
 
-const ListMemories = ({ searchResults }) => {
+const ListMemories = ( {searchResults } ) => {
   if (!searchResults || searchResults.length < 1) {
     return <p id="nomemories">Start typing a song to see suggestions!</p>
   }
-
   console.log(searchResults);
+
   return (
     <>
       <Col xs={6}>
