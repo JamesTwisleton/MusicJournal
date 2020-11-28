@@ -1,6 +1,6 @@
-import React from 'react';
-import { Row, Col, Table } from 'react-bootstrap/';
-
+import React from 'react'
+import { Row, Col, Table } from 'react-bootstrap/'
+import PropTypes from 'prop-types'
 
 const ListMemories = ({ memories }) => {
   if (!memories || memories.length < 1) {
@@ -22,7 +22,7 @@ const ListMemories = ({ memories }) => {
               </tr>
             </thead>
             <tbody id="memoriestablebody">
-              {memories && Object.values(memories).map(({song, text}) => 
+              {memories && Object.values(memories).map(({ song, text }) =>
                 <tr key={song}>
                   <td>{song}</td>
                   <td>{text}</td>
@@ -36,4 +36,8 @@ const ListMemories = ({ memories }) => {
   )
 }
 
-export default ListMemories;
+ListMemories.propTypes = {
+  memories: PropTypes.array
+}
+
+export default ListMemories

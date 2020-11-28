@@ -1,8 +1,8 @@
-import React from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap/';
+import React from 'react'
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap/'
 
 const NavigationBar = () => {
-    return (
+  return (
         <Navbar style={{ position: 'absolute', top: '0' }} className="navbar-dark bg-dark" expand="lg">
             <Navbar.Brand href="#home">MusicJournal</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -20,7 +20,7 @@ const NavigationBar = () => {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    );
+  )
 }
 
-export default NavigationBar;
+export default NavigationBar

@@ -4,11 +4,11 @@ import TopTracks from '../components/TopTracks'
 import withAuth from '../utils/withAuth'
 
 const Dashboard = (props) => {
-    return (
+  return (
         <Layout>
             <TopTracks {...props} />
         </Layout>
-    )
+  )
 }
 
 export default withAuth(Dashboard)

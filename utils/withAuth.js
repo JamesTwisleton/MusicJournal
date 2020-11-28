@@ -1,54 +1,39 @@
-import React from 'react';
-import router from 'next/router';
-import { getMe } from './auth';
+import React, { useEffect, useState } from 'react'
+import router from 'next/router'
+import { getMe } from './auth'
 
 const withAuth = (Component) => {
+  const [loaded, setLoaded] = useState('')
+  const [token, setToken] = useState('')
+  const [user, setUser] = useState('')
 
-    return class extends React.Component {
+  useEffect(async () => {
+    if (document.cookie) {
+      try {
+        const [tokenFromServer, userFromServer] = await getMe()
+        if (!tokenFromServer || !userFromServer) {
+          router.push('/login')
+        } else {
+          setToken(tokenFromServer)
+          setUser(userFromServer)
+          setLoaded(true)
+        }
+      } catch (error) {
+        console.log('withauth', error)
+      }
+    } else {
+      router.push('/login')
+    }
+  }, [])
 
-        constructor(props) {
-            super(props);
-            this.state = {
-                status: 'LOADING',
-            }
-        }
-        async componentDidMount() {
-            if (document.cookie) {
-                try {
-                    const [token, user] = await getMe();
-                    if (!token || !user) {
-                        router.push('/login');
-                    } else {                    
-                        this.props.token = token;
-                        this.props.user = user;
-                        this.setState({
-                            status: 'SIGNED_IN'
-                        });
-                    }
-                } catch (error) {
-                    console.log('withauth', error)
-                }
-            } else {
-                router.push('/login');
-            }
-        }
-
-        renderContent() {
-            const { status } = this.state;
-            if (status == 'LOADING') {
-                return <h1>Loading ......</h1>;
-            } else if (status == 'SIGNED_IN') {
-                return <Component {...this.props} />
-            }
-        }
-        render() {
-            return (
-                <React.Fragment>
-                    {this.renderContent()}
-                </React.Fragment>
-            );
-        }
-    };
+  return (
+    <>
+      {!loaded && <p>Loading...</p>}
+      {loaded &&
+        <Component {...this.props} />
+      }
+    </>
+  )
 }
 
-export default withAuth;
+export default withAuth

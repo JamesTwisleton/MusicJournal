@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
-import { getMe, deleteMe } from '../utils/auth';
-import router from 'next/router';
-import { Container, Row, Button, Image } from 'react-bootstrap/';
+import React, { useEffect, useState } from 'react'
+import Head from 'next/head'
+import { getMe, deleteMe } from '../utils/auth'
+import router from 'next/router'
+import { Container, Row, Button, Image } from 'react-bootstrap/'
 
 const Login = () => {
   const [user, setUser] = useState()
 
   const handleSignIn = () => {
-    router.push(`/api/spotify-auth`);
+    router.push('/api/spotify-auth')
   }
 
-  //This should probably move into the nav
+  // This should probably move into the nav
   const handleSignOut = async () => {
     const success = await deleteMe()
     if (success) {
       console.log('success', success)
       setUser()
-    } 
+    }
   }
 
   useEffect(() => {
-    const getUser = async () => { 
+    const getUser = async () => {
       try {
         const [, currentUser] = await getMe()
         setUser(currentUser)
@@ -29,7 +29,7 @@ const Login = () => {
         setUser()
       }
     }
-    
+
     getUser()
   }, [])
 
@@ -46,7 +46,7 @@ const Login = () => {
         <Row className="text-center">
           <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
         </Row>
-          {!user && 
+          {!user &&
             <Row className="justify-content-center">
               <Button variant="dark" onClick={() => handleSignIn()}>
                 <Image src="spotify-logo.png" fluid />
@@ -57,7 +57,7 @@ const Login = () => {
           {user &&
             <Container>
               <Row className="justify-content-center">
-                <p>You're already logged in!</p>
+                <p>You&aposre already logged in!</p>
               </Row>
               <Row className="justify-content-center">
                 <Button variant="light" onClick={() => handleSignOut()}>
@@ -79,4 +79,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Login

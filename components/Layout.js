@@ -1,10 +1,11 @@
-import NavigationBar from './NavigationBar';
-import { Container } from 'react-bootstrap/';
+import React from 'react'
+import { Container } from 'react-bootstrap/'
+import PropTypes from 'prop-types'
 
 const Layout = ({ children }) => {
   return (
     <>
-      {/*<NavigationBar />*/}
+      {/* <NavigationBar /> */}
       <Container fluid id="main">
 
         {children}
@@ -20,7 +21,11 @@ const Layout = ({ children }) => {
         </style>
       </Container>
     </>
-  );
+  )
 }
 
-export default Layout;
+Layout.propTypes = {
+  children: PropTypes.func
+}
+
+export default Layout
