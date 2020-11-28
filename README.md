@@ -82,3 +82,4 @@ Possibly using existing widgets
 ### How authentication works
 
 ![music-journal authentication diagram](images/authentication.png)
+
