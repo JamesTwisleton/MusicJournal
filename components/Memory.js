@@ -11,33 +11,47 @@ const Memory = (props) => {
     const [song, setSong] = useState('')
     const [searchResults, setSearchResults] = useState('')
 
-    useEffect(async () => {
-        try {
-            const response = await getMemories(props.token)
-            setMemories(response)
-        } catch (error) {
-            console.log(error)
+    useEffect(() => {
+        const fetchMemories = async () => {
+            try {
+                const response = await getMemories(props.token)
+                setMemories(response)
+            } catch (error) {
+                console.log(error)
+            }
         }
+        fetchMemories()
+
     }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-
-        try {
-            const newMemory = await addMemory({ song, text }, props.token)
-            setSong('')
-            setText('')
-            setMemories({ ...memories, ...newMemory })
-        } catch (error) {
-            console.log('handle submit error', error)
+        const submitMemory = async () => {
+            try {
+                const newMemory = await addMemory({ song, text }, props.token)
+                setSong('')
+                setText('')
+                setMemories({ ...memories, ...newMemory })
+            } catch (error) {
+                console.log('handle submit error', error)
+            }
         }
+        submitMemory()
+
     }
 
-    useEffect(async () => {
-        if (song > 2) {
-            const response = await searchSpotifyTracks(song, 5, props.token)
-            setSearchResults(response)
+    useEffect(() => {
+        const searchSpotify = async () => {
+            if (song.length > 2) {
+                try {
+                    const response = await searchSpotifyTracks(song, 5, props.token)
+                    setSearchResults(response)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
         }
+        searchSpotify()
     }, [song])
 
     return (<>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap/';
 
-const AddMemory = ({ handleSubmit, handleAutocomplete, text, setText, song, setSong }) => {
+const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
     return (<>
         <Col xs={12} sm={6}>
             <Row className="justify-content-center" xs={12} >
@@ -16,7 +16,6 @@ const AddMemory = ({ handleSubmit, handleAutocomplete, text, setText, song, setS
                                 as="textarea"
                                 onChange={({ target }) => {
                                     setSong(target.value)
-                                    handleAutocomplete()
                                 }}
                                 rows="1"
                                 value={song}
