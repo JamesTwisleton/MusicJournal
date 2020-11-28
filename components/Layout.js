@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 const Layout = ({ children }) => {
   return (
     <>
-      {/* <NavigationBar /> */}
       <Container fluid id="main">
 
         {children}

@@ -16,7 +16,7 @@ const AddMemory = ({ handleSubmit, text, setText, song, setSong }) => {
                             <Form.Control
                                 as="textarea"
                                 onChange={({ target }) => {
-                                    setSong(target.value)
+                                  setSong(target.value)
                                 }}
                                 rows="1"
                                 value={song}

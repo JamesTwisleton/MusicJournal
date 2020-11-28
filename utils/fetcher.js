@@ -13,36 +13,35 @@ const getMemories = async (token) => {
 }
 
 const searchSpotifyTracks = async (search, limit, token) => {
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
-    };
-    const response = await axios.get(`/api/search-spotify-tracks?search=${search}&limit=${limit}`, config)
-    return response.data
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+  const response = await axios.get(`/api/search-spotify-tracks?search=${search}&limit=${limit}`, config)
+  return response.data
 }
 
 const addMemory = async (memory, token) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
 
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
-    }
-
-    const response = await axios.post('/api/save-memory', memory, config);
-    return response.data
+  const response = await axios.post('/api/save-memory', memory, config)
+  return response.data
 }
 
 const getTopTracks = async (token) => {
-    const config = {
-        headers: { Authorization: `Bearer ${token}` }
-    }
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
 
-    const response = await axios.get('/api/top-tracks-from-spotify', config);
-    return response.data
+  const response = await axios.get('/api/top-tracks-from-spotify', config)
+  return response.data
 }
 
 export {
-    fetcher,
-    getMemories,
-    addMemory,
-    getTopTracks,
-    searchSpotifyTracks
+  fetcher,
+  getMemories,
+  addMemory,
+  getTopTracks,
+  searchSpotifyTracks
 }

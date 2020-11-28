@@ -1,13 +1,11 @@
-import React from 'react';
-import { Row, Col, Table } from 'react-bootstrap/';
+import React from 'react'
+import { Row, Col, Table } from 'react-bootstrap/'
+import PropTypes from 'prop-types'
 
-
-const ListMemories = ( {searchResults } ) => {
+const Suggestions = ({ searchResults }) => {
   if (!searchResults || searchResults.length < 1) {
     return <p id="nomemories">Start typing a song to see suggestions!</p>
   }
-  console.log(searchResults);
-
   return (
     <>
       <Col xs={6}>
@@ -35,4 +33,8 @@ const ListMemories = ( {searchResults } ) => {
   )
 }
 
-export default ListMemories;
+Suggestions.propTypes = {
+  searchResults: PropTypes.array
+}
+
+export default Suggestions

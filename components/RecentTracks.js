@@ -3,7 +3,7 @@ import { fetcher } from '../utils/fetcher'
 import withAuth from '../utils/withAuth'
 import PropTypes from 'prop-types'
 
-const RecentTracks = (props) => {
+const RecentTracks = (token) => {
   const [carouselIndex, setCarouselIndex] = useState(0)
   const [recentTracks, setRecentTracks] = useState([])
   const [scaleDirection, setScaleDirection] = useState(1)
@@ -20,7 +20,7 @@ const RecentTracks = (props) => {
       setScaleRatio(scaleRatio + (0.00009 * scaleDirection))
     }, 10)
 
-    fetcher(`/api/recent-tracks-from-spotify?token=${props.token}`)
+    fetcher(`/api/recent-tracks-from-spotify?token=${token}`)
       .then((response) => {
         setRecentTracks(response.data)
       })
@@ -77,7 +77,6 @@ const RecentTracks = (props) => {
 
 RecentTracks.propTypes = {
   token: PropTypes.string
-
 }
 
 export default withAuth(RecentTracks)

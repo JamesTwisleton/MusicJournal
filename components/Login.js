@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { getMe, deleteMe } from '../utils/auth'
 import router from 'next/router'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
-
-const Login = () => {
-  const [user, setUser] = useState()
-
+import PropTypes from 'prop-types'
+const Login = (user, setUser) => {
   const handleSignIn = () => {
     router.push('/api/spotify-auth')
   }
@@ -46,26 +44,26 @@ const Login = () => {
         <Row className="text-center">
           <p>MusicJournal is a different way of thinking about the music you love, how it relates to your memories, and how to categorize it.</p>
         </Row>
-          {!user &&
-            <Row className="justify-content-center">
-              <Button variant="dark" onClick={() => handleSignIn()}>
-                <Image src="spotify-logo.png" fluid />
+        {!user &&
+          <Row className="justify-content-center">
+            <Button variant="dark" onClick={() => handleSignIn()}>
+              <Image src="spotify-logo.png" fluid />
                 Login with Spotify to continue!
               </Button>
+          </Row>
+        }
+        {user &&
+          <Container>
+            <Row className="justify-content-center">
+              <p>You&aposre already logged in!</p>
             </Row>
-          }
-          {user &&
-            <Container>
-              <Row className="justify-content-center">
-                <p>You&aposre already logged in!</p>
-              </Row>
-              <Row className="justify-content-center">
-                <Button variant="light" onClick={() => handleSignOut()}>
-                  Logout
+            <Row className="justify-content-center">
+              <Button variant="light" onClick={() => handleSignOut()}>
+                Logout
                 </Button>
-              </Row>
-            </Container>
-          }
+            </Row>
+          </Container>
+        }
       </Container>
 
       <style global jsx>
@@ -77,6 +75,11 @@ const Login = () => {
       </style>
     </>
   )
+}
+
+Login.PropTypes = {
+  user: PropTypes.object,
+  setUser: PropTypes.func
 }
 
 export default Login
