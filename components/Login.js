@@ -1,39 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import useAuth from '../utils/useAuth'
 import Head from 'next/head'
-import { getMe, deleteMe } from '../utils/auth'
-import { useRouter } from 'next/router'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 
 const Login = () => {
-  const router = useRouter()
-  const [user, setUser] = useState()
-
-  const handleSignIn = () => {
-    router.push('/api/spotify-auth')
-  }
-
-  // This should probably move into the nav
-  const handleSignOut = async () => {
-    const success = await deleteMe()
-    if (success) {
-      console.log('success', success)
-      setUser()
-    }
-  }
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const [, currentUser] = await getMe()
-        setUser(currentUser)
-      } catch (error) {
-        setUser()
-      }
-    }
-
-    getUser()
-  }, [])
+  const [,, user, authService] = useAuth()
 
   return (
     <>
@@ -50,7 +22,7 @@ const Login = () => {
         </Row>
         {!user &&
           <Row className="justify-content-center">
-            <Button variant="dark" onClick={() => handleSignIn()}>
+            <Button variant="dark" onClick={() => authService.handleSignIn()}>
               <Image src="spotify-logo.png" fluid />
                 Login with Spotify to continue!
               </Button>
@@ -62,7 +34,7 @@ const Login = () => {
               <p>You&apos;re already logged in!</p>
             </Row>
             <Row className="justify-content-center">
-              <Button variant="light" onClick={() => handleSignOut()}>
+              <Button variant="light" onClick={() => authService.handleSignOut()}>
                 Logout
                 </Button>
             </Row>

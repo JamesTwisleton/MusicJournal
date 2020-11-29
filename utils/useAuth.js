@@ -34,7 +34,27 @@ const useAuth = () => {
     }
   }, [router])
 
-  return [loaded, token, user]
+  const handleSignIn = () => {
+    router.push('/api/spotify-auth')
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await deleteMe()
+    } catch (error) {
+      console.log('sign out', error)
+    }
+  }
+
+  return [
+    loaded,
+    token,
+    user,
+    {
+      handleSignIn,
+      handleSignOut
+    }
+  ]
 }
 
 export default useAuth

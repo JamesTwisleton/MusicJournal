@@ -5,6 +5,10 @@ import PropTypes from 'prop-types'
 const Layout = ({ children }) => {
   return (
     <>
+<<<<<<< HEAD
+=======
+      <NavigationBar />
+>>>>>>> New style nav
       <Container fluid id="main">
 
         {children}
