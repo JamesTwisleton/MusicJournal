@@ -6,9 +6,13 @@ const Layout = ({ children }) => {
   return (
     <>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       <NavigationBar />
 >>>>>>> New style nav
+=======
+      <NavigationBar />
+>>>>>>> c97ebfe429da566e7c8703251e5050112696b5e8
       <Container fluid id="main">
 
         {children}
