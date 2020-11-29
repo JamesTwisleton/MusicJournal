@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap/';
 const Layout = ({ children }) => {
   return (
     <>
-      {/*<NavigationBar />*/}
+      <NavigationBar />
       <Container fluid id="main">
 
         {children}
