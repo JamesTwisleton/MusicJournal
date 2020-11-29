@@ -38,10 +38,20 @@ const getTopTracks = async (token) => {
   return response.data
 }
 
+const getRecentTracks = async (token) => {
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  }
+
+  const response = await axios.get('/api/recent-tracks-from-spotify', config)
+  return response.data
+}
+
 export {
   fetcher,
   getMemories,
   addMemory,
   getTopTracks,
-  searchSpotifyTracks
+  searchSpotifyTracks,
+  getRecentTracks
 }

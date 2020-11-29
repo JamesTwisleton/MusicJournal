@@ -16,15 +16,15 @@ async function handler (req, res) {
   await cors(req, res)
   await verifyTokenMiddleware(req, res)
 
-  try {
-    const user = auth.currentUser
-    if (!user) {
-      console.log('list-memories user')
-      res.status(403).json({
-        authenticated: false
-      })
-    }
+  const user = auth.currentUser
 
+  if (!user) {
+    res.status(403).json({
+      authenticated: false
+    })
+  }
+
+  try {
     const memoriesRef = await database.ref(`/memory/${user.uid}`)
     const memoriesSnapshot = await memoriesRef.orderByValue().once('value')
     const memories = Object.assign({}, memoriesSnapshot.val())

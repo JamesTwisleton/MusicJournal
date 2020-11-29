@@ -17,15 +17,15 @@ export default async function handler (req, res) {
   await cors(req, res)
   await verifyTokenMiddleware(req, res)
 
+  const user = auth.currentUser
+
+  if (!user) {
+    res.status(403).json({
+      authenticated: false
+    })
+  }
+
   try {
-    const user = auth.currentUser
-
-    if (!user) {
-      res.status(403).json({
-        authenticated: false
-      })
-    }
-
     const ref = await database.ref(`/spotifyAccessToken/${user.uid}`)
     const snapshot = await ref.orderByValue().once('value')
     const spotifyToken = await snapshot.val()

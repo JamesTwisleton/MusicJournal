@@ -37,7 +37,7 @@ const ListMemories = ({ memories }) => {
 }
 
 ListMemories.propTypes = {
-  memories: PropTypes.array
+  memories: PropTypes.object
 }
 
 export default ListMemories

@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { getMe, deleteMe } from '../utils/auth'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
-const Login = (user, setUser) => {
+
+const Login = () => {
+  const router = useRouter()
+  const [user, setUser] = useState()
+
   const handleSignIn = () => {
     router.push('/api/spotify-auth')
   }
@@ -55,7 +59,7 @@ const Login = (user, setUser) => {
         {user &&
           <Container>
             <Row className="justify-content-center">
-              <p>You&aposre already logged in!</p>
+              <p>You&apos;re already logged in!</p>
             </Row>
             <Row className="justify-content-center">
               <Button variant="light" onClick={() => handleSignOut()}>
@@ -77,7 +81,7 @@ const Login = (user, setUser) => {
   )
 }
 
-Login.PropTypes = {
+Login.propTypes = {
   user: PropTypes.object,
   setUser: PropTypes.func
 }

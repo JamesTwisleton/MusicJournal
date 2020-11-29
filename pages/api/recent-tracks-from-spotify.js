@@ -3,6 +3,7 @@ import Cors from 'cors'
 import { database } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../utils/initMiddleware'
 import Spotify from '../../utils/initSpotify'
+import verifyToken from '../../utils/verifyToken'
 
 const cors = initMiddleware(
   Cors({
@@ -10,16 +11,21 @@ const cors = initMiddleware(
   })
 )
 
+const verifyTokenMiddleware = initMiddleware(verifyToken)
+
 async function handler (req, res) {
   await cors(req, res)
+  await verifyTokenMiddleware(req, res)
 
-  if (!req.query.token) {
-    return res.writeHead(401).end()
+  const user = auth.currentUser
+
+  if (!user) {
+    res.status(403).json({
+      authenticated: false
+    })
   }
 
   try {
-    const user = auth.currentUser
-
     const ref = await database.ref(`/spotifyAccessToken/${user.uid}`)
     const snapshot = await ref.orderByValue().once('value')
     const spotifyToken = await snapshot.val()

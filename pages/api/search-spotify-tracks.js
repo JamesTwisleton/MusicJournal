@@ -1,4 +1,4 @@
-import { auth } from 'firebase'
+import { auth } from '../../utils/initFirebase'
 import Cors from 'cors'
 import { database } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../utils/initMiddleware'
@@ -17,8 +17,15 @@ async function handler (req, res) {
   await cors(req, res)
   await verifyTokenMiddleware(req, res)
 
+  const user = auth.currentUser
+
+  if (!user) {
+    res.status(403).json({
+      authenticated: false
+    })
+  }
+
   try {
-    const user = auth().currentUser
     const ref = await database.ref(`/spotifyAccessToken/${user.uid}`)
     const snapshot = await ref.orderByValue().once('value')
     const spotifyToken = await snapshot.val()

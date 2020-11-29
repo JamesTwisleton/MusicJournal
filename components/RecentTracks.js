@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { fetcher } from '../utils/fetcher'
-import withAuth from '../utils/withAuth'
+import { getRecentTracks } from '../utils/fetcher'
+import useAuth from '../utils/useAuth'
 import PropTypes from 'prop-types'
 
-const RecentTracks = (token) => {
+const RecentTracks = () => {
+  const [loaded, token] = useAuth()
   const [carouselIndex, setCarouselIndex] = useState(0)
   const [recentTracks, setRecentTracks] = useState([])
-  const [scaleDirection, setScaleDirection] = useState(1)
-  const [scaleRatio, setScaleRatio] = useState(0)
 
   useEffect(() => {
-    setInterval(() => {
-      if (scaleRatio > 0.2) {
-        setScaleDirection(-1)
+    const initRecentTracks = async () => {
+      try {
+        const response = await getRecentTracks(token)
+        setRecentTracks(response)
+      } catch (error) {
+        console.log('initRecentTracks', error)
       }
-      if (scaleRatio < 0) {
-        setScaleDirection(1)
-      }
-      setScaleRatio(scaleRatio + (0.00009 * scaleDirection))
-    }, 10)
+    }
 
-    fetcher(`/api/recent-tracks-from-spotify?token=${token}`)
-      .then((response) => {
-        setRecentTracks(response.data)
-      })
-      .catch(error => console.log(error))
-  }, [])
+    if (token) {
+      initRecentTracks()
+    }
+  }, [token])
 
   const moveCarousel = (index) => {
     let nextIndex = carouselIndex + index
@@ -37,17 +33,22 @@ const RecentTracks = (token) => {
     setCarouselIndex(nextIndex % recentTracks.length)
   }
 
+  if (!loaded) {
+    return <p>Loading...</p>
+  }
+
   return (
     <div style={{ overflowX: 'hidden', overflowY: 'hidden' }}>
       <div
         className="backgroundDiv"
         style={recentTracks.length > 0
           ? {
+              animation: 'slideIn 3s linear 0s infinite alternate',
               background: `url(${recentTracks[carouselIndex].image.url}) center center/cover no-repeat fixed`,
-              transform: `scale(${1 + scaleRatio}, ${1 + scaleRatio})`,
               height: '100vh'
             }
-          : {}}>
+          : {}
+        }>
         <div style={{ height: '100%', width: '100%' }}>
           <div
             style={{ height: '100%', float: 'left', width: '50%' }}
@@ -71,6 +72,17 @@ const RecentTracks = (token) => {
       }}>
         {recentTracks.length > 0 ? recentTracks[carouselIndex].description : ''}
       </p>
+      <style global jsx>{`
+            @keyframes slideIn {
+              0% {
+                transform: scale(1.2)
+              }
+              100% {
+                transform: scale(1.0)
+              }
+            }
+          `}
+      </style>
     </div>
   )
 }
@@ -79,4 +91,4 @@ RecentTracks.propTypes = {
   token: PropTypes.string
 }
 
-export default withAuth(RecentTracks)
+export default RecentTracks

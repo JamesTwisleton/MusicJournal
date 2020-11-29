@@ -1,14 +1,13 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import TopTracks from '../components/TopTracks'
-import withAuth from '../utils/withAuth'
 
-const Dashboard = (props) => {
+const Dashboard = () => {
   return (
-        <Layout>
-            <TopTracks {...props} />
-        </Layout>
+    <Layout>
+      <TopTracks />
+    </Layout>
   )
 }
 
-export default withAuth(Dashboard)
+export default Dashboard

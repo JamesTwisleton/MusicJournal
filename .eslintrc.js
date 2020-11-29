@@ -6,7 +6,8 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
-    'standard'
+    'standard',
+    'plugin:react-hooks/recommended'
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -19,5 +20,6 @@ module.exports = {
     'react'
   ],
   rules: {
+    semi: [2, 'never']
   }
 }

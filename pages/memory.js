@@ -3,9 +3,9 @@ import Memory from '../components/Memory'
 
 const Dashboard = () => {
   return (
-        <>
-            <Memory/>
-        </>
+    <>
+      <Memory />
+    </>
   )
 }
 
