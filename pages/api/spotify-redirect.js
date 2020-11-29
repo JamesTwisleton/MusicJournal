@@ -1,63 +1,63 @@
-import { auth } from '../../utils/initFirebase';
-import Cors from 'cors';
-import { database, firebaseAdmin } from '../../utils/initFirebaseAdmin';
+import { auth } from '../../utils/initFirebase'
+import Cors from 'cors'
+import { database, firebaseAdmin } from '../../utils/initFirebaseAdmin'
 import initMiddleware from '../../utils/initMiddleware'
-import serialize from 'serialize-javascript';
-import Spotify from '../../utils/initSpotify';
+import serialize from 'serialize-javascript'
+import Spotify from '../../utils/initSpotify'
 
 const cors = initMiddleware(
   Cors({
-      methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
+    methods: ['GET', 'POST', 'OPTIONS', 'HEAD']
   })
 )
 
-async function handler(req, res) {
+async function handler (req, res) {
   await cors(req, res)
 
   try {
-    const cookie = JSON.parse(req.cookies.__session);
+    const cookie = JSON.parse(req.cookies.__session)
     if (!cookie.verificationState) {
-      console.error('verificationState cookie not set');
-      throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.');
+      console.error('verificationState cookie not set')
+      throw new Error('State cookie not set or expired. Maybe you took too long to authorize. Please try again.')
     } else if (cookie.verificationState !== req.query.state) {
-      throw new Error('State validation failed');
+      throw new Error('State validation failed')
     }
 
-    console.log('Received auth code:', req.query.code);
+    console.log('Received auth code:', req.query.code)
 
     Spotify.authorizationCodeGrant(req.query.code, (error, data) => {
       if (error) {
-        throw error;
+        throw error
       }
-      Spotify.setAccessToken(data.body['access_token']);
+      Spotify.setAccessToken(data.body.access_token)
       Spotify.getMe(async (error, userResults) => {
         if (error) {
-          throw error;
+          throw error
         }
 
-        const accessToken = data.body['access_token'];
-        const spotifyUserID = userResults.body['id'];
-        const profilePic = userResults.body['images'][0]['url'];
-        const userName = userResults.body['display_name'];
-        const email = userResults.body['email'];
-        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken);
+        const accessToken = data.body.access_token
+        const spotifyUserID = userResults.body.id
+        const profilePic = userResults.body.images[0].url
+        const userName = userResults.body.display_name
+        const email = userResults.body.email
+        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken)
         const serializedCookie = serialize({
           firebaseToken,
-          'maxAge': 3600000,
-          'secure': true,
-          'httpOnly': true,
-        });
+          maxAge: 3600000,
+          secure: true,
+          httpOnly: true
+        })
         // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        await auth.signInWithCustomToken(firebaseToken);
+        await auth.signInWithCustomToken(firebaseToken)
         return res.writeHead(301, {
           Location: process.env.SITE_ADDRESS,
           'set-cookie': `__session=${serializedCookie}; Path=/`
-        }).end();
-      });
-    });
+        }).end()
+      })
+    })
   } catch (error) {
-    console.log(error);
-    return res.send('error');
+    console.log(error)
+    return res.send('error')
   }
 };
 
@@ -68,19 +68,19 @@ async function handler(req, res) {
  *
  * @returns {Promise<string>} The Firebase custom auth token in a promise.
  */
-async function createFirebaseAccount(spotifyID, displayName, photoURL, email, accessToken) {
+async function createFirebaseAccount (spotifyID, displayName, photoURL, email, accessToken) {
   // The UID we'll assign to the user.
-  const uid = `spotify:${spotifyID}`;
+  const uid = `spotify:${spotifyID}`
 
   // Save the access token to the Firebase Realtime Database.
-  const databaseTask = database.ref(`/spotifyAccessToken/${uid}`).set(accessToken);
+  const databaseTask = database.ref(`/spotifyAccessToken/${uid}`).set(accessToken)
 
   // Create or update the user account.
   const userCreationTask = firebaseAdmin.auth().updateUser(uid, {
     displayName,
     photoURL,
     email,
-    emailVerified: true,
+    emailVerified: true
   }).catch((error) => {
     // If user does not exists we create it.
     if (error.code === 'auth/user-not-found') {
@@ -89,18 +89,18 @@ async function createFirebaseAccount(spotifyID, displayName, photoURL, email, ac
         displayName,
         photoURL,
         email,
-        emailVerified: true,
-      });
+        emailVerified: true
+      })
     }
-    throw error;
-  });
+    throw error
+  })
 
   // Wait for all async tasks to complete, then generate and return a custom auth token.
-  await Promise.all([userCreationTask, databaseTask]);
+  await Promise.all([userCreationTask, databaseTask])
   // Create a Firebase custom auth token.
-  const token = await firebaseAdmin.auth().createCustomToken(uid);
-  console.log('Created Custom token for UID "', uid, '" Token:', token);
-  return token;
+  const token = await firebaseAdmin.auth().createCustomToken(uid)
+  console.log('Created Custom token for UID "', uid, '" Token:', token)
+  return token
 }
 
-export default handler;
+export default handler

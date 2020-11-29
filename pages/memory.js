@@ -2,11 +2,11 @@ import React from 'react'
 import Memory from '../components/Memory'
 
 const Dashboard = () => {
-    return (
-        <>
-            <Memory/>
-        </>
-    )
+  return (
+    <>
+      <Memory />
+    </>
+  )
 }
 
 export default Dashboard
