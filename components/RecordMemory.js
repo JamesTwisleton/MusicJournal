@@ -5,9 +5,13 @@ import { Row, Col, Container, Button } from 'react-bootstrap/'
 import { useRouter } from 'next/router'
 
 const RecordMemory = () => {
-  useAuth()
+  const [loaded] = useAuth()
   const router = useRouter()
-  return (<>
+  if (!loaded) {
+    return <p>Loading...</p>
+  }
+
+  return (
 
     <Container>
       <style jsx global>{`
@@ -21,7 +25,7 @@ const RecordMemory = () => {
       </Row>
       <Row>
         <Col>
-          <Button variant="primary" size="lg" block onClick = {() => router.push('/record-memory/song')}>
+          <Button variant="primary" size="lg" block onClick={() => router.push('/record-memory/song')}>
             Start with a song
           </Button>
 
@@ -34,8 +38,7 @@ const RecordMemory = () => {
       </Row>
 
     </Container>
-
-  </>)
+  )
 }
 
 // AddMemory.propTypes = {

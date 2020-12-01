@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Table, Form } from 'react-bootstrap/'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { searchSpotifyTracks } from '../utils/fetcher'
 import useAuth from '../utils/useAuth'
-const AddMemory = () => {
-  const [, token] = useAuth()
+
+const ChooseSong = () => {
+  const [loaded, token] = useAuth()
   const [song, setSong] = useState('')
   const [searchResults, setSearchResults] = useState()
 
@@ -23,7 +24,12 @@ const AddMemory = () => {
       searchSpotify()
     }
   }, [song, token])
-  return (<>
+
+  if (!loaded) {
+    return <p>Loading...</p>
+  }
+
+  return (
     <Container>
       <Col xs={6}>
         <Row className="justify-content-center text-center">
@@ -67,15 +73,15 @@ const AddMemory = () => {
         </Row>
       </Col>
     </Container>
-  </>)
+  )
 }
 
-AddMemory.propTypes = {
-  handleSubmit: PropTypes.func,
-  text: PropTypes.string,
-  setText: PropTypes.func,
-  song: PropTypes.string,
-  setSong: PropTypes.func
-}
+// AddMemory.propTypes = {
+//   handleSubmit: PropTypes.func,
+//   text: PropTypes.string,
+//   setText: PropTypes.func,
+//   song: PropTypes.string,
+//   setSong: PropTypes.func
+// }
 
-export default AddMemory
+export default ChooseSong
