@@ -1,5 +1,5 @@
 import React from 'react'
-import RecordMemory from '../components/RecordMemory'
+import RecordMemory from '../../components/RecordMemory'
 
 const Dashboard = () => {
   return (

@@ -1,10 +1,12 @@
 import React from 'react'
 import useAuth from '../utils/useAuth'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { Row, Col, Container, Button } from 'react-bootstrap/'
+import { useRouter } from 'next/router'
 
 const RecordMemory = () => {
-  const [loaded, token] = useAuth()
+  useAuth()
+  const router = useRouter()
   return (<>
 
     <Container>
@@ -19,7 +21,7 @@ const RecordMemory = () => {
       </Row>
       <Row>
         <Col>
-          <Button variant="primary" size="lg" block>
+          <Button variant="primary" size="lg" block onClick = {() => router.push('/record-memory/song')}>
             Start with a song
           </Button>
 
