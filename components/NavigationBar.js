@@ -1,11 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
-import useAuth from '../utils/useAuth'
 import { Button, Navbar, Nav } from 'react-bootstrap/'
 
 const NavigationBar = () => {
-  const [loaded, token, , authService] = useAuth()
-
   return (
     <Navbar collapseOnSelect className="navbar-dark bg-dark" expand="lg">
       <Link href="/" passHref>
@@ -25,20 +22,12 @@ const NavigationBar = () => {
           </Link>
         </Nav>
         <Nav className="justify-content-end">
-          {!loaded && !token &&
-            <Link href="/login" passHref>
-              <Button onClick={() => authService.handleSignIn()} variant="light">
-                Login
-                            </Button>
-            </Link>
-          }
-          {loaded && token &&
-            <Link href="/login" passHref>
-              <Button onClick={() => authService.handleSignOut()} variant="light">
-                Log out
-                            </Button>
-            </Link>
-          }
+          <Link href="/login" passHref>
+            <Button onClick={() => console.log('sign in')} variant="light">Login</Button>
+          </Link>
+          <Link href="/login" passHref>
+            <Button onClick={() => console.log('sign out')} variant="light">Log out</Button>
+          </Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
