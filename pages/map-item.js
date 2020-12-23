@@ -1,8 +1,8 @@
 import React from 'react'
-import Map from '../components/map/Map'
+import MapItem from '../components/map/MapItem'
 
 const MapPage = () => (
-  <Map />
+  <MapItem />
 )
 
 export default MapPage
