@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { getRecentTracks } from '../utils/fetcher'
-import useAuth from '../utils/useAuth'
+import { useAuth } from '../utils/useAuth'
 import PropTypes from 'prop-types'
 
 const RecentTracks = () => {
-  const [loaded, token] = useAuth()
+  const { data: { loaded, token } } = useAuth()
   const [carouselIndex, setCarouselIndex] = useState(0)
   const [recentTracks, setRecentTracks] = useState([])
 

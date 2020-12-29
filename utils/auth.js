@@ -15,6 +15,7 @@ const getMe = async () => {
     return [firebaseToken, user]
   } catch (error) {
     console.log('auth', error)
+    return [null, null]
   }
 }
 

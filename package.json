@@ -9,7 +9,8 @@
     "start": "next start",
     "deploy": "yarn build && cross-env NODE_ENV=production firebase deploy --only functions,hosting",
     "deploy:local": "yarn build && cross-env NODE_ENV=production firebase emulators:start --only functions,hosting",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "debug": "NODE_OPTIONS='--inspect' next dev"
   },
   "dependencies": {
     "axios": "^0.21.0",
