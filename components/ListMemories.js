@@ -14,7 +14,7 @@ const ListMemories = ({ memories }) => {
           <h4>Your Top Memories</h4>
         </Row>
         <Row className="justify-content-center">
-          <Table striped bordered hover size="sm" id="memoriestable">
+          <Table striped bordered hover size="sm" id="memoriestable" variant="dark">
             <thead>
               <tr>
                 <th>Song</th>

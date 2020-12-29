@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
               background-size: cover;
               margin: 0;
               padding:0;
-              min-height: 100vh;
+              min-height: 93.4vh;
             }
           `}
         </style>

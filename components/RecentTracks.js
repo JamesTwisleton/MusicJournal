@@ -45,7 +45,7 @@ const RecentTracks = () => {
           ? {
               animation: 'slideIn 3s linear 0s infinite alternate',
               background: `url(${recentTracks[carouselIndex].image.url}) center center/cover no-repeat fixed`,
-              height: '100vh'
+              height: '93.4vh'
             }
           : {}
         }>

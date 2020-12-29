@@ -23,10 +23,14 @@ const NavigationBar = () => {
         </Nav>
         <Nav className="justify-content-end">
           <Link href="/login" passHref>
-            <Button onClick={() => console.log('sign in')} variant="light">Login</Button>
+            <Button onClick={() => console.log('sign in')} variant="light" disabled>
+              Login
+            </Button>
           </Link>
           <Link href="/login" passHref>
-            <Button onClick={() => console.log('sign out')} variant="light">Log out</Button>
+            <Button onClick={() => console.log('sign out')} variant="light" disabled>
+              Log out
+            </Button>
           </Link>
         </Nav>
       </Navbar.Collapse>
