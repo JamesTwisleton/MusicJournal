@@ -2,6 +2,9 @@ import React from 'react'
 // import { Row, Col, Form, Button } from 'react-bootstrap/'
 // import PropTypes from 'prop-types'
 
+// const Slider = () => {
+
+// };
 const MapItem = () => {
   return (<div className="container">
         <img className="image" src="https://i.scdn.co/image/ab67616d0000b2731e07e60dea6e2c877ea3b2b4"></img>
