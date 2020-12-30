@@ -57,9 +57,9 @@ jobs:
         run: 'yarn add firebase-functions'
         shell: bash      
       - name:  Deploy to Firebase Channel
-        uses: w9jds/firebase-action@master, nelonoel/branch-name@v1.0.1      
+        uses: w9jds/firebase-action@master
         with:
-          args: hosting:channel:deploy ${BRANCH_NAME} 
+          args: hosting:channel:deploy ${GITHUB_REF##*/}
         env:
           FIREBASE_TOKEN:  ${{ secrets.FIREBASE_CI_TOKEN }}
           FIREBASE_API_KEY : ${{ secrets.FIREBASE_TOKEN }}
