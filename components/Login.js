@@ -26,7 +26,6 @@ const Login = () => {
     const getUser = async () => {
       try {
         const [, currentUser] = await getMe()
-        console.log(currentUser)
         setUser(currentUser)
       } catch (error) {
         setUser()
