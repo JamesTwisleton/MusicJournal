@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Head from 'next/head'
-import { getMe, deleteMe } from '../utils/auth'
 import { useRouter } from 'next/router'
+import { getMe, deleteMe } from '../utils/auth'
+import Head from 'next/head'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 

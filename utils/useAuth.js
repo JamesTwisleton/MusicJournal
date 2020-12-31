@@ -34,7 +34,11 @@ const useAuth = () => {
     }
   }, [router])
 
-  return [loaded, token, user]
+  return [
+    loaded,
+    token,
+    user
+  ]
 }
 
 export default useAuth
