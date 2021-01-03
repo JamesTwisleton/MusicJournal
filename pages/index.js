@@ -6,4 +6,7 @@ const Dashboard = () => {
     <RecentTracks />
   )
 }
+
+Dashboard.isAuthorized = (__session) => !!__session
+
 export default Dashboard

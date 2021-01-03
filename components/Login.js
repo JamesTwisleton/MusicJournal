@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Head from 'next/head'
-import { getMe, deleteMe } from '../utils/auth'
-import { useRouter } from 'next/router'
+import { useAuth } from '../utils/useAuth'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 
 const Login = () => {
-  const router = useRouter()
-  const [user, setUser] = useState()
+  const { data: { user }, signIn, signOut } = useAuth()
 
   const handleSignIn = () => {
-    router.push('/api/spotify-auth')
+    signIn()
   }
 
   // This should probably move into the nav
   const handleSignOut = async () => {
-    const success = await deleteMe()
-    if (success) {
-      console.log('success', success)
-      setUser()
-    }
+    signOut()
   }
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const [, currentUser] = await getMe()
-        setUser(currentUser)
-      } catch (error) {
-        setUser()
-      }
-    }
-
-    getUser()
-  }, [])
 
   return (
     <>

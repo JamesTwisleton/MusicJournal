@@ -1,25 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { getMe, deleteMe } from './auth'
+import PropTypes from 'prop-types'
 
 const AuthContext = createContext()
 
 const AuthProvider = (props) => {
-  const [token, setToken] = useState(null)
+  const router = useRouter()
   const [user, setUser] = useState(null)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const [initToken, initUser] = await getMe()
-
-        console.log(initToken, initUser)
-
-        if (initToken && initUser) {
-          setToken(initToken)
-          setUser(initUser)
-        }
-
+        const initUser = await getMe(props.token)
+        setUser(initUser)
         setLoaded(true)
       } catch (error) {
         console.log(error)
@@ -27,38 +22,36 @@ const AuthProvider = (props) => {
       }
     }
 
-    initAuth()
-  }, [])
+    if (!props.token) {
+      setUser(null)
+      setLoaded(true)
+    } else {
+      initAuth()
+    }
+  }, [props.token])
 
   const signIn = async () => {
-    try {
-      setLoaded(false)
-      const [newToken, newUser] = await getMe()
-      setToken(newToken)
-      setUser(newUser)
-      setLoaded(true)
-    } catch (error) {
-      console.log('signin error', error)
-      setToken(null)
-      setUser(null)
-    }
+    router.push('/api/spotify-auth')
   }
 
   const signOut = async () => {
     try {
       await deleteMe()
-      setToken(null)
       setUser(false)
     } catch (error) {
       console.log('signout issue', error)
-      setToken(null)
       setUser(null)
     }
   }
 
+  const { token } = props
   const data = { loaded, token, user }
 
   return <AuthContext.Provider value={{ data, signIn, signOut }} {...props} />
+}
+
+AuthProvider.propTypes = {
+  token: PropTypes.string
 }
 
 const useAuth = () => useContext(AuthContext)

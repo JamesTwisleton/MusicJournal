@@ -2,20 +2,18 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { auth } from './initFirebase'
 
-const getMe = async () => {
+const getMe = async (token) => {
   try {
-    const { firebaseToken } = JSON.parse(Cookies.get('__session'))
-
     const config = {
-      headers: { Authorization: `Bearer ${firebaseToken}` }
+      headers: { Authorization: `Bearer ${token}` }
     }
 
     const { data: { user } } = await axios.get('/api/me', config)
 
-    return [firebaseToken, user]
+    return user
   } catch (error) {
     console.log('auth', error)
-    return [null, null]
+    return null
   }
 }
 

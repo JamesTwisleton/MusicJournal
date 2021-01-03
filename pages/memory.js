@@ -9,4 +9,6 @@ const Dashboard = () => {
   )
 }
 
+Dashboard.isAuthorized = (__session) => !!__session
+
 export default Dashboard

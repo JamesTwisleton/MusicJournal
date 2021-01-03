@@ -5,4 +5,6 @@ const MapPage = () => (
   <Map />
 )
 
+MapPage.isAuthorized = (__session) => !!__session
+
 export default MapPage
