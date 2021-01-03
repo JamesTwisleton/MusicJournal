@@ -1,8 +1,11 @@
 import React from 'react'
-import Map from '../components/Map'
+import Layout from '../components/Layout'
+import Map from '../components/map/Map'
 
 const MapPage = () => (
-  <Map />
+  <Layout>
+    <Map />
+  </Layout>
 )
 
 MapPage.isAuthorized = (__session) => !!__session

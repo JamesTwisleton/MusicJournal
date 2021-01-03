@@ -1,6 +1,8 @@
+
 import React from 'react'
 import Head from 'next/head'
 import { useAuth } from '../utils/useAuth'
+import Head from 'next/head'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 

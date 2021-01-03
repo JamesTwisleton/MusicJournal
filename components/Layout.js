@@ -1,10 +1,12 @@
 import React from 'react'
 import { Container } from 'react-bootstrap/'
+import NavigationBar from './NavigationBar'
 import PropTypes from 'prop-types'
 
 const Layout = ({ children }) => {
   return (
     <>
+      <NavigationBar />
       <Container fluid id="main">
 
         {children}
@@ -14,7 +16,7 @@ const Layout = ({ children }) => {
               background-size: cover;
               margin: 0;
               padding:0;
-              min-height: 100vh;
+              min-height: 93.4vh;
             }
           `}
         </style>
