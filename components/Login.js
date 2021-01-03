@@ -2,21 +2,11 @@
 import React from 'react'
 import Head from 'next/head'
 import { useAuth } from '../utils/useAuth'
-import Head from 'next/head'
 import { Container, Row, Button, Image } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 
 const Login = () => {
   const { data: { user }, signIn, signOut } = useAuth()
-
-  const handleSignIn = () => {
-    signIn()
-  }
-
-  // This should probably move into the nav
-  const handleSignOut = async () => {
-    signOut()
-  }
 
   return (
     <>
@@ -33,7 +23,7 @@ const Login = () => {
         </Row>
         {!user &&
           <Row className="justify-content-center">
-            <Button variant="dark" onClick={() => handleSignIn()}>
+            <Button variant="dark" onClick={() => signIn()}>
               <Image src="spotify-logo.png" fluid />
                 Login with Spotify to continue!
               </Button>
@@ -45,7 +35,7 @@ const Login = () => {
               <p>You&apos;re already logged in!</p>
             </Row>
             <Row className="justify-content-center">
-              <Button variant="light" onClick={() => handleSignOut()}>
+              <Button variant="light" onClick={() => signOut()}>
                 Logout
                 </Button>
             </Row>
