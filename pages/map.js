@@ -8,4 +8,6 @@ const MapPage = () => (
   </Layout>
 )
 
+MapPage.isAuthorized = (__session) => !!__session
+
 export default MapPage

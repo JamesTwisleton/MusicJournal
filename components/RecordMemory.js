@@ -1,11 +1,11 @@
 import React from 'react'
-import useAuth from '../utils/useAuth'
+import { useAuth } from '../utils/useAuth'
 // import PropTypes from 'prop-types'
 import { Row, Col, Container, Button } from 'react-bootstrap/'
 import { useRouter } from 'next/router'
 
 const RecordMemory = () => {
-  const [loaded] = useAuth()
+  const { data: { loaded } } = useAuth()
   const router = useRouter()
   if (!loaded) {
     return <p>Loading...</p>

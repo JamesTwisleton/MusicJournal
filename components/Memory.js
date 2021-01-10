@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import useAuth from '../utils/useAuth'
+import { useAuth } from '../utils/useAuth'
 import AddMemory from '../components/AddMemory'
 import ListMemories from '../components/ListMemories'
 import Suggestions from '../components/Suggestions'
@@ -8,7 +8,7 @@ import { Row } from 'react-bootstrap/'
 import PropTypes from 'prop-types'
 
 const Memory = () => {
-  const [loaded, token] = useAuth()
+  const { data: { loaded, token } } = useAuth()
   const [memories, setMemories] = useState()
   const [text, setText] = useState('')
   const [song, setSong] = useState('')

@@ -1,23 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { deleteMe } from '../utils/auth'
+import { useAuth } from '../utils/useAuth'
 import { Button, Navbar, Nav } from 'react-bootstrap/'
 
 const NavigationBar = () => {
-  const router = useRouter()
-
-  const handleSignIn = () => {
-    router.push('/api/spotify-auth')
-  }
-
-  const handleSignOut = async () => {
-    try {
-      await deleteMe()
-    } catch (error) {
-      console.log('sign out', error)
-    }
-  }
+  const { data: { user }, signIn, signOut } = useAuth()
 
   return (
     <Navbar collapseOnSelect className="navbar-dark bg-dark" expand="lg">
@@ -38,16 +25,20 @@ const NavigationBar = () => {
           </Link>
         </Nav>
         <Nav className="justify-content-end">
-          <Link href="/login" passHref>
-            <Button onClick={() => handleSignIn()} variant="light">
-              Login
-            </Button>
-          </Link>
-          <Link href="/login" passHref>
-            <Button onClick={() => handleSignOut()} variant="light">
-              Log out
-            </Button>
-          </Link>
+          {!user &&
+            <Link href="/login" passHref>
+              <Button onClick={() => signIn()} variant="light">
+                Login
+              </Button>
+            </Link>
+          }
+          {user &&
+            <Link href="/login" passHref>
+              <Button onClick={() => signOut()} variant="light">
+                Log out
+              </Button>
+            </Link>
+          }
         </Nav>
       </Navbar.Collapse>
     </Navbar>
