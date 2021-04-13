@@ -1,22 +1,7 @@
 import GoogleMapReact from 'google-map-react'
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-
-const MapItem = ({ text }) => (
-  <div style={{
-    color: 'white',
-    background: 'purple',
-    padding: '15px 10px',
-    display: 'inline-flex',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '100%',
-    transform: 'translate(-50%, -50%)'
-  }}>
-    {text}
-  </div>
-)
+import MapItem from './MapItem'
 
 MapItem.propTypes = {
   text: PropTypes.string
