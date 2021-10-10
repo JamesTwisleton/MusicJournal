@@ -21,6 +21,7 @@
     "firebase": "^7.21.0",
     "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.11.0",
+    "firebase-tools": "^9.20.0",
     "google-map-react": "^2.1.9",
     "js-cookie": "^2.2.1",
     "next": "9.5.4",

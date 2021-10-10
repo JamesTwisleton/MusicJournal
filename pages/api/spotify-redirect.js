@@ -47,8 +47,7 @@ async function handler (req, res) {
           secure: true,
           httpOnly: true
         })
-        // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        await auth.signInWithCustomToken(firebaseToken)
+        await auth.signInWithCustomToken(firebaseToken).catch(error => console.log((error)))
         return res.writeHead(301, {
           Location: process.env.SITE_ADDRESS,
           'set-cookie': `__session=${serializedCookie}; Path=/`
