@@ -40,7 +40,7 @@ async function handler (req, res) {
         const profilePic = userResults.body.images[0].url
         const userName = userResults.body.display_name
         const email = userResults.body.email
-        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken)
+        const firebaseToken = await createFirebaseAccount(spotifyUserID, userName, profilePic, email, accessToken).catch(error => console.log(error))
         const serializedCookie = serialize({
           firebaseToken,
           maxAge: 3600000,
