@@ -32,14 +32,16 @@ async function handler (req, res) {
 
     Spotify.setAccessToken(spotifyToken)
 
-    const data = await Spotify.getMyRecentlyPlayedTracks({ limit: 20 })
+    const data = await Spotify.getMyRecentlyPlayedTracks({ limit: 50 })
 
     const recentSongs = data.body.items.map(({ track }, idx) => ({
       position: idx,
       trackName: track.name,
       description: `${track.name} by ${track.artists[0].name}`,
       image: track.album.images[0],
-      track
+      track,
+      //Better way to do this?
+      played_at: data.body.items[idx].played_at
     }))
 
     res.send(recentSongs)
