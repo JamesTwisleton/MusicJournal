@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import useAuth from '../utils/useAuth'
+import { useAuth } from '../utils/useAuth'
 import { Container, Row, Card, CardColumns } from 'react-bootstrap/'
 import { getTopTracks } from '../utils/fetcher'
 import PropTypes from 'prop-types'
 
 const TopTracks = () => {
-  const [loaded, token] = useAuth()
+  const { data: { loaded, token } } = useAuth()
   const [topTracks, setTopTracks] = useState()
 
   useEffect(() => {

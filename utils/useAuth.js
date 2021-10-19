@@ -1,44 +1,59 @@
-import { useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getMe, deleteMe } from './auth'
+import PropTypes from 'prop-types'
 
-const useAuth = () => {
+const AuthContext = createContext()
+
+const AuthProvider = (props) => {
   const router = useRouter()
-  const [token, setToken] = useState()
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(null)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const [tokenFromServer, userFromServer] = await getMe()
-
-        if (!tokenFromServer || !userFromServer) {
-          console.log('user or token undefined')
-          await deleteMe()
-          router.push('/login')
-        } else {
-          setToken(tokenFromServer)
-          setUser(userFromServer)
-          setLoaded(true)
-        }
+        const initUser = await getMe(props.token)
+        setUser(initUser)
+        setLoaded(true)
       } catch (error) {
-        console.log('useAuth', error)
+        console.log(error)
+        setLoaded(true)
       }
     }
 
-    if (document.cookie) {
-      initAuth()
+    if (!props.token) {
+      setUser(null)
+      setLoaded(true)
     } else {
-      router.push('/login')
+      initAuth()
     }
-  }, [router])
+  }, [props.token])
 
-  return [
-    loaded,
-    token,
-    user
-  ]
+  const signIn = async () => {
+    router.push('/api/spotify-auth')
+  }
+
+  const signOut = async () => {
+    try {
+      await deleteMe()
+      setUser(false)
+    } catch (error) {
+      console.log('signout issue', error)
+      setUser(null)
+    }
+  }
+
+  const { token } = props
+  const data = { loaded, token, user }
+
+  return <AuthContext.Provider value={{ data, signIn, signOut }} {...props} />
 }
 
-export default useAuth
+AuthProvider.propTypes = {
+  token: PropTypes.string
+}
+
+const useAuth = () => useContext(AuthContext)
+
+export { AuthProvider, useAuth }

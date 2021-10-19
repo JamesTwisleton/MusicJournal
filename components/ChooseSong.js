@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Table, Form } from 'react-bootstrap/'
 // import PropTypes from 'prop-types'
 import { searchSpotifyTracks } from '../utils/fetcher'
-import useAuth from '../utils/useAuth'
+import { useAuth } from '../utils/useAuth'
 
 const ChooseSong = () => {
-  const [loaded, token] = useAuth()
+  const { data: { loaded, token } } = useAuth()
   const [song, setSong] = useState('')
   const [searchResults, setSearchResults] = useState()
 

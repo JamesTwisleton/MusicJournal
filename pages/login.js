@@ -8,4 +8,6 @@ const LoginPage = () => (
   </Layout>
 )
 
+LoginPage.isAuthorized = (__session) => true
+
 export default LoginPage

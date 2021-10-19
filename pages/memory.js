@@ -8,4 +8,6 @@ const Dashboard = () => (
   </Layout>
 )
 
+Dashboard.isAuthorized = (__session) => !!__session
+
 export default Dashboard
